@@ -1,0 +1,32 @@
+package club.ss220.manager.command.dev;
+
+import club.ss220.core.model.GameServer;
+import club.ss220.manager.controller.DebugController;
+import io.github.freya022.botcommands.api.commands.annotations.Command;
+import io.github.freya022.botcommands.api.commands.application.ApplicationCommand;
+import io.github.freya022.botcommands.api.commands.application.slash.GuildSlashEvent;
+import io.github.freya022.botcommands.api.commands.application.slash.annotations.JDASlashCommand;
+import io.github.freya022.botcommands.api.commands.application.slash.annotations.SlashOption;
+import io.github.freya022.botcommands.api.commands.application.slash.annotations.TopLevelSlashCommandData;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Command
+@AllArgsConstructor
+public class DebugCommand extends ApplicationCommand {
+
+    private final DebugController debugController;
+
+    @JDASlashCommand(name = "debug", description = "Отладочные данные от игрового сервера.")
+    @TopLevelSlashCommandData(defaultLocked = true)
+    public void onSlashInteraction(GuildSlashEvent event,
+                                   @SlashOption(description = "Игровой сервер.", usePredefinedChoices = true)
+                                   GameServer server) {
+        log.debug("Executing /debug command, server: {}", server.getFullName());
+
+        boolean ephemeral = true;
+        event.deferReply(ephemeral).queue();
+        debugController.showServerDebugInfo(event.getHook(), server);
+    }
+}
