@@ -1,4 +1,4 @@
-package club.ss220.core.service;
+package club.ss220.manager.service.service;
 
 import club.ss220.core.data.integration.central.CentralApiClient;
 import club.ss220.core.data.integration.central.UserDto;

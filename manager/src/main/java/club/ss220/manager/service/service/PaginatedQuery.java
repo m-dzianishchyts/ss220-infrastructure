@@ -1,4 +1,4 @@
-package club.ss220.core.service;
+package club.ss220.manager.service.service;
 
 public interface PaginatedQuery<Q extends PaginatedQuery<Q>> {
 

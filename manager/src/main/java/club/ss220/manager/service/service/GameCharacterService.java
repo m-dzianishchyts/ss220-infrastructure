@@ -1,4 +1,4 @@
-package club.ss220.core.service;
+package club.ss220.manager.service.service;
 
 import club.ss220.core.data.integration.game.CharacterRepositoryAdapter;
 import club.ss220.core.model.GameBuild;

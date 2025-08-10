@@ -2,7 +2,7 @@ package club.ss220.manager.controller;
 
 import club.ss220.core.model.GameServer;
 import club.ss220.core.model.GameServerStatus;
-import club.ss220.core.service.GameServerService;
+import club.ss220.manager.service.service.GameServerService;
 import club.ss220.manager.view.OnlineView;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

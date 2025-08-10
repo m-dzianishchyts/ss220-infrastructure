@@ -2,7 +2,7 @@ package club.ss220.manager.controller;
 
 import club.ss220.core.model.GameBuild;
 import club.ss220.core.model.GameCharacter;
-import club.ss220.core.service.GameCharacterService;
+import club.ss220.manager.service.service.GameCharacterService;
 import club.ss220.manager.view.CharacterView;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
