@@ -1,4 +1,4 @@
-package club.ss220.core.data.integration.game;
+package club.ss220.core.data.db;
 
 import club.ss220.core.model.GameCharacter;
 import org.springframework.stereotype.Repository;

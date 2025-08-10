@@ -1,7 +1,7 @@
 package club.ss220.core.data.db.paradise.repository;
 
 import club.ss220.core.config.GameConfig;
-import club.ss220.core.data.integration.game.CharacterRepositoryAdapter;
+import club.ss220.core.data.db.CharacterRepositoryAdapter;
 import club.ss220.core.data.mapper.Mappers;
 import club.ss220.core.model.GameCharacter;
 import org.springframework.beans.factory.annotation.Qualifier;

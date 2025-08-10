@@ -1,6 +1,6 @@
 package club.ss220.manager.service.service;
 
-import club.ss220.core.data.integration.game.CharacterRepositoryAdapter;
+import club.ss220.core.data.db.CharacterRepositoryAdapter;
 import club.ss220.core.data.integration.game.GameApiClient;
 import club.ss220.core.model.GameBuild;
 import club.ss220.core.model.exception.GameBuildOperationNotSupportedException;

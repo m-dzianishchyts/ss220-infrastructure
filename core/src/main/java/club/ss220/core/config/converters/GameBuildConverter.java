@@ -1,4 +1,4 @@
-package club.ss220.core.config;
+package club.ss220.core.config.converters;
 
 import club.ss220.core.model.GameBuild;
 import jakarta.annotation.Nullable;
