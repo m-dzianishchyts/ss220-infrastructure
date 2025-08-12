@@ -1,9 +1,8 @@
 package club.ss220.core.spi.exception;
 
 import club.ss220.core.shared.GameServerData;
-import org.springframework.dao.DataAccessException;
 
-public class GameServerPortException extends DataAccessException {
+public class GameServerPortException extends RuntimeException {
 
     private final GameServerData server;
 

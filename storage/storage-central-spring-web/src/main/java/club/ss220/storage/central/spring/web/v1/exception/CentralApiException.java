@@ -1,8 +1,6 @@
 package club.ss220.storage.central.spring.web.v1.exception;
 
-import org.springframework.dao.DataAccessException;
-
-public class CentralApiException extends DataAccessException {
+public class CentralApiException extends RuntimeException {
 
     public CentralApiException(String msg) {
         super(msg);
