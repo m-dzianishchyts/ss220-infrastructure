@@ -18,8 +18,7 @@
         <module>core</module>
         <module>storage</module>
         <module>port</module>
-        <module>central-api</module>
-        <module>manager</module>
+        <module>app</module>
     </modules>
 
     <properties>
@@ -105,19 +104,6 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
 </project>

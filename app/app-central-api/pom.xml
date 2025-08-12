@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>club.ss220</groupId>
-		<artifactId>infrastructure</artifactId>
+		<artifactId>app</artifactId>
 		<version>1.0</version>
 	</parent>
 
-	<artifactId>central-api</artifactId>
+	<artifactId>app-central-api</artifactId>
 
 	<dependencies>
         <dependency>

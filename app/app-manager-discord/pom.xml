@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>club.ss220</groupId>
-        <artifactId>infrastructure</artifactId>
+        <artifactId>app</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>manager</artifactId>
+    <artifactId>app-manager-discord</artifactId>
 
     <dependencies>
         <dependency>
@@ -65,6 +65,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
