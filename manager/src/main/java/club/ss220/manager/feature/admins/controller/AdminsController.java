@@ -1,7 +1,7 @@
 package club.ss220.manager.feature.admins.controller;
 
 import club.ss220.core.shared.GameServerData;
-import club.ss220.core.application.GetAllAdminsListUseCase;
+import club.ss220.core.application.GetOnlineAdminsListUseCase;
 import club.ss220.core.config.GameConfig;
 import club.ss220.core.shared.OnlineAdminStatusData;
 import club.ss220.manager.feature.admins.view.AdminsView;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class AdminsController {
 
     private final AdminsView view;
-    private final GetAllAdminsListUseCase getAllAdminsList;
+    private final GetOnlineAdminsListUseCase getAllAdminsList;
     private final GameConfig gameConfig;
 
     public void showOnlineAdmins(InteractionHook hook) {

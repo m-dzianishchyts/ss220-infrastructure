@@ -1,6 +1,6 @@
 package club.ss220.manager.feature.servers.controller;
 
-import club.ss220.core.application.GetPlayersListUseCase;
+import club.ss220.core.application.GetOnlinePlayersListUseCase;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.manager.feature.servers.view.WhoView;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 public class WhoController {
 
     private final WhoView view;
-    private final GetPlayersListUseCase getPlayersList;
+    private final GetOnlinePlayersListUseCase getPlayersList;
 
     public void showPlayersOnServer(InteractionHook hook, GameServerData server) {
         try {

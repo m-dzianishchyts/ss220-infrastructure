@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-public class GetPlayersListUseCase {
+public class GetOnlinePlayersListUseCase {
 
     private final Map<GameBuild, GameServerPort> gameServerPorts;
 

@@ -1,8 +1,8 @@
 package club.ss220.manager.config;
 
-import club.ss220.core.application.GetAllAdminsListUseCase;
+import club.ss220.core.application.GetOnlineAdminsListUseCase;
 import club.ss220.core.application.GetAllServersStatusUseCase;
-import club.ss220.core.application.GetPlayersListUseCase;
+import club.ss220.core.application.GetOnlinePlayersListUseCase;
 import club.ss220.core.application.GetServerStatusUseCase;
 import club.ss220.core.application.GetMemberDataUseCase;
 import club.ss220.core.application.SearchCharactersUseCase;
@@ -32,13 +32,13 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public GetPlayersListUseCase playersListUseCase(Map<GameBuild, GameServerPort> gameApiClients) {
-        return new GetPlayersListUseCase(gameApiClients);
+    public GetOnlinePlayersListUseCase playersListUseCase(Map<GameBuild, GameServerPort> gameApiClients) {
+        return new GetOnlinePlayersListUseCase(gameApiClients);
     }
 
     @Bean
-    public GetAllAdminsListUseCase getAllAdminsListUseCase(Map<GameBuild, GameServerPort> gameApiClients) {
-        return new GetAllAdminsListUseCase(gameApiClients);
+    public GetOnlineAdminsListUseCase getAllAdminsListUseCase(Map<GameBuild, GameServerPort> gameApiClients) {
+        return new GetOnlineAdminsListUseCase(gameApiClients);
     }
 
     @Bean
