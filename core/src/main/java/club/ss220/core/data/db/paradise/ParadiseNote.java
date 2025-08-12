@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Deprecated
 @Entity
 @Table(name = "notes")
 @Data

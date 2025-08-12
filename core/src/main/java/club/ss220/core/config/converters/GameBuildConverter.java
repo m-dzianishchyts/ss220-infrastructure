@@ -1,6 +1,6 @@
 package club.ss220.core.config.converters;
 
-import club.ss220.core.model.GameBuild;
+import club.ss220.core.shared.GameBuild;
 import jakarta.annotation.Nullable;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

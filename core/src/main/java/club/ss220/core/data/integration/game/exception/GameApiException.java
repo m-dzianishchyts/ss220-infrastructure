@@ -1,8 +1,9 @@
 package club.ss220.core.data.integration.game.exception;
 
-import club.ss220.core.model.GameServer;
+import club.ss220.core.shared.GameServer;
 import org.springframework.dao.DataAccessException;
 
+@Deprecated
 public class GameApiException extends DataAccessException {
 
     private final GameServer server;

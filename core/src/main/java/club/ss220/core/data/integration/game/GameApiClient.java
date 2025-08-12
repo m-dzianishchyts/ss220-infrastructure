@@ -1,12 +1,13 @@
 package club.ss220.core.data.integration.game;
 
-import club.ss220.core.model.GameServer;
-import club.ss220.core.model.GameServerStatus;
-import club.ss220.core.model.OnlineAdminStatus;
+import club.ss220.core.shared.GameServer;
+import club.ss220.core.shared.GameServerStatus;
+import club.ss220.core.shared.OnlineAdminStatus;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@Deprecated
 public interface GameApiClient {
 
     Mono<GameServerStatus> getServerStatus(GameServer gameServer);

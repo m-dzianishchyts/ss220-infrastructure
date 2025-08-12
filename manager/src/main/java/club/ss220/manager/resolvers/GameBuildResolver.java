@@ -1,6 +1,6 @@
 package club.ss220.manager.resolvers;
 
-import club.ss220.core.model.GameBuild;
+import club.ss220.core.shared.GameBuild;
 import io.github.freya022.botcommands.api.commands.application.slash.options.SlashCommandOption;
 import io.github.freya022.botcommands.api.core.service.annotations.Resolver;
 import io.github.freya022.botcommands.api.parameters.ClassParameterResolver;

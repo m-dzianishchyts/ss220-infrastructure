@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Deprecated
 @Repository
 public interface ParadisePlayerRepository extends JpaRepository<ParadisePlayer, Integer> {
-    
+
     Optional<ParadisePlayer> findByCkey(String ckey);
 }

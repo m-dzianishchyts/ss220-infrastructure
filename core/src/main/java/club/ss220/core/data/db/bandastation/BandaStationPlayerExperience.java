@@ -1,12 +1,13 @@
 package club.ss220.core.data.db.bandastation;
 
-import club.ss220.core.model.PlayerExperience;
-import club.ss220.core.model.RoleCategory;
+import club.ss220.core.shared.PlayerExperience;
+import club.ss220.core.shared.RoleCategory;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class BandaStationPlayerExperience extends PlayerExperience {
 
     public BandaStationPlayerExperience(Map<RoleCategory, Duration> exp) {

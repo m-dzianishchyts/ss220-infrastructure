@@ -2,7 +2,7 @@ package club.ss220.core.data.integration.game.impl;
 
 import club.ss220.core.data.integration.game.GameApiClient;
 import club.ss220.core.data.integration.game.exception.GameApiException;
-import club.ss220.core.model.GameServer;
+import club.ss220.core.shared.GameServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 @Slf4j
 public abstract class AbstractGameApiClient implements GameApiClient {
 

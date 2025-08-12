@@ -1,13 +1,14 @@
 package club.ss220.core.data.integration.game.impl.bandastation;
 
 import club.ss220.core.data.integration.game.impl.ServerResponse;
-import club.ss220.core.model.OnlineAdminStatus;
+import club.ss220.core.shared.OnlineAdminStatus;
 import org.apache.commons.lang3.stream.Streams;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class BandaStationOnlineAdminStatusDTO extends ServerResponse implements OnlineAdminStatus {
 
     @Override

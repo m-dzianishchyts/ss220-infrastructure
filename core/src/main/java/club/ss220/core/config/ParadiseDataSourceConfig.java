@@ -15,11 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(basePackages = ParadiseDataSourceConfig.PACKAGE,
-                       entityManagerFactoryRef = ParadiseDataSourceConfig.EMF_REF,
-                       transactionManagerRef = ParadiseDataSourceConfig.TX_MANAGER_REF)
+@Deprecated // moved to adapter-paradise-jpa module
+// @Configuration
+// @EnableTransactionManagement
+// @EnableJpaRepositories(basePackages = ParadiseDataSourceConfig.PACKAGE,
+//                        entityManagerFactoryRef = ParadiseDataSourceConfig.EMF_REF,
+//                        transactionManagerRef = ParadiseDataSourceConfig.TX_MANAGER_REF)
 public class ParadiseDataSourceConfig {
 
     public static final String UNIT_NAME = "paradise";

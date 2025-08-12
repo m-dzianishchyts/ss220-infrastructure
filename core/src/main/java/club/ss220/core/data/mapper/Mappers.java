@@ -8,13 +8,14 @@ import club.ss220.core.data.db.paradise.ParadiseBan;
 import club.ss220.core.data.db.paradise.ParadiseCharacter;
 import club.ss220.core.data.db.paradise.ParadisePlayer;
 import club.ss220.core.data.db.paradise.ParadisePlayerExperience;
-import club.ss220.core.model.Ban;
-import club.ss220.core.model.GameBuild;
-import club.ss220.core.model.GameCharacter;
-import club.ss220.core.model.Member;
-import club.ss220.core.model.Player;
-import club.ss220.core.model.PlayerExperience;
-import club.ss220.core.model.RoleCategory;
+import club.ss220.core.shared.Ban;
+import club.ss220.core.shared.GameBuild;
+import club.ss220.core.shared.GameCharacter;
+import club.ss220.core.shared.Member;
+import club.ss220.core.shared.Player;
+import club.ss220.core.shared.PlayerExperience;
+import club.ss220.core.shared.RoleCategory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Component
+@ConditionalOnBean(Mappers.RoleCategoryMapping.class)
 public class Mappers {
 
     private final RoleCategoryMapping roleCategoryMapping;
@@ -130,6 +133,8 @@ public class Mappers {
     }
 
     @Service
+    @ConditionalOnBean(BandaStationConfig.class)
+    @Deprecated
     public static class RoleCategoryMapping {
 
         private final Map<String, RoleCategory> roleCategoryMap;

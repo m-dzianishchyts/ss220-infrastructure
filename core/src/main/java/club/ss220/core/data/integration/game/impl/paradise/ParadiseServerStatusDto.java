@@ -1,7 +1,7 @@
 package club.ss220.core.data.integration.game.impl.paradise;
 
 import club.ss220.core.data.integration.game.impl.ServerResponse;
-import club.ss220.core.model.GameServerStatus;
+import club.ss220.core.shared.GameServerStatus;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Duration;
@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+@Deprecated
 public class ParadiseServerStatusDto extends ServerResponse implements GameServerStatus {
 
     @NotNull

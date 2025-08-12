@@ -1,12 +1,13 @@
 package club.ss220.core.data.integration.game.impl.paradise;
 
 import club.ss220.core.data.integration.game.impl.ServerResponse;
-import club.ss220.core.model.OnlineAdminStatus;
+import club.ss220.core.shared.OnlineAdminStatus;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class ParadiseOnlineAdminStatusDTO extends ServerResponse implements OnlineAdminStatus {
 
     @Override

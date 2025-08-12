@@ -1,9 +1,10 @@
 package club.ss220.core.data.db.paradise.converter;
 
-import club.ss220.core.model.GameCharacter;
+import club.ss220.core.shared.GameCharacter;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
+@Deprecated
 @Converter(autoApply = true)
 public class GameCharacterSpeciesConverter implements AttributeConverter<GameCharacter.Species, String> {
 

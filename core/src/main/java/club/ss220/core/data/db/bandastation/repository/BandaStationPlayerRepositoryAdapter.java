@@ -3,13 +3,14 @@ package club.ss220.core.data.db.bandastation.repository;
 import club.ss220.core.config.GameConfig;
 import club.ss220.core.data.integration.game.PlayerRepositoryAdapter;
 import club.ss220.core.data.mapper.Mappers;
-import club.ss220.core.model.Player;
+import club.ss220.core.shared.Player;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 
 import java.util.Optional;
 
-@Repository
+@Deprecated
+@ConditionalOnBean(Mappers.class)
 @Qualifier(GameConfig.BUILD_BANDASTRATION)
 public class BandaStationPlayerRepositoryAdapter implements PlayerRepositoryAdapter {
 

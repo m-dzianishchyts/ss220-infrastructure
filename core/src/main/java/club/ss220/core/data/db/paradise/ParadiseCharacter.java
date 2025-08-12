@@ -1,11 +1,12 @@
 package club.ss220.core.data.db.paradise;
 
-import club.ss220.core.model.GameCharacter;
+import club.ss220.core.shared.GameCharacter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Deprecated
 @Data
 @Entity
 @Table(name = "characters")

@@ -1,6 +1,6 @@
 package club.ss220.manager.util;
 
-import club.ss220.core.model.Ban;
+import club.ss220.core.shared.BanData;
 import club.ss220.manager.pagination.PaginationData;
 import club.ss220.manager.view.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
@@ -40,7 +40,7 @@ public class Embeds {
         return embed.build();
     }
 
-    public MessageEmbed paginatedBanList(PaginationData<Ban> paginationData) {
+    public MessageEmbed paginatedBanList(PaginationData<BanData> paginationData) {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle(paginationData.title());
 
@@ -64,17 +64,17 @@ public class Embeds {
         return embed.build();
     }
 
-    public MessageEmbed banDetails(Ban ban) {
-        String banDateTimeFormatted = formatters.formatDateTime(ban.getBanTime());
-        String unbanDateTimeFormatted = Optional.ofNullable(ban.getUnbanTime())
+    public MessageEmbed banDetails(BanData ban) {
+        String banDateTimeFormatted = formatters.formatDateTime(ban.banTime());
+        String unbanDateTimeFormatted = Optional.ofNullable(ban.unbanTime())
                 .map(formatters::formatDateTime).orElse("Бессрочно");
 
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("%s **Детали блокировки #%d**".formatted(Emojis.PROHIBITED.getFormatted(), ban.getId()));
-        embed.setDescription(ban.getReason());
-        embed.addField("Тип блокировки", ban.getBanType(), true);
-        embed.addField("Нарушитель", ban.getCkey(), true);
-        embed.addField("Админ", ban.getAdminCkey(), true);
+        embed.setTitle("%s **Детали блокировки #%d**".formatted(Emojis.PROHIBITED.getFormatted(), ban.id()));
+        embed.setDescription(ban.reason());
+        embed.addField("Тип блокировки", ban.banType(), true);
+        embed.addField("Нарушитель", ban.ckey(), true);
+        embed.addField("Админ", ban.adminCkey(), true);
         embed.addField("Статус", ban.isActive() ? "Активна" : "Снята", true);
         embed.addField("Время блокировки", banDateTimeFormatted, true);
         embed.addField("Время снятия блокировки", unbanDateTimeFormatted, true);
@@ -83,14 +83,14 @@ public class Embeds {
         return embed.build();
     }
 
-    private String banBlock(Ban ban) {
-        String banType = ban.getBanType().toLowerCase().contains("job") ? "Блокировка роли" : "Блокировка";
+    private String banBlock(BanData ban) {
+        String banType = ban.banType().toLowerCase().contains("job") ? "Блокировка роли" : "Блокировка";
         String statusText = ban.isActive() ? "Активна" : "Снята";
         UnicodeEmoji statusEmoji = ban.isActive() ? Emojis.RED_CIRCLE : Emojis.GREEN_CIRCLE;
         UnicodeEmoji expiredEmoji = ban.isExpired() ? Emojis.OCTAGONAL_SIGN : Emojis.WHITE_CHECK_MARK;
-        String banDateTimeString = formatters.formatDateTime(ban.getBanTime());
+        String banDateTimeString = formatters.formatDateTime(ban.banTime());
         String unbanDateTimeString =
-                Optional.ofNullable(ban.getUnbanTime()).map(formatters::formatDateTime).orElse("Бессрочно");
+                Optional.ofNullable(ban.unbanTime()).map(formatters::formatDateTime).orElse("Бессрочно");
 
         return """
                 %s **%s #%d** — %s
@@ -98,8 +98,8 @@ public class Embeds {
                 %s %s — %s %s
                 %s %s
                 """.formatted(
-                statusEmoji.getFormatted(), banType, ban.getId(), statusText,
-                Emojis.COP.getFormatted(), ban.getAdminCkey(),
+                statusEmoji.getFormatted(), banType, ban.id(), statusText,
+                Emojis.COP.getFormatted(), ban.adminCkey(),
                 Emojis.CALENDAR.getFormatted(), banDateTimeString, expiredEmoji.getFormatted(), unbanDateTimeString,
                 Emojis.MEMO.getFormatted(), ban.getShortReason()
         ).trim();

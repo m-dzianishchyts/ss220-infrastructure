@@ -13,7 +13,22 @@
     <dependencies>
         <dependency>
             <groupId>club.ss220</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>storage-central-spring-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>club.ss220</groupId>
+            <artifactId>storage-paradise-spring-jpa</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>club.ss220</groupId>
+            <artifactId>storage-bandastation-spring-jpa</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>club.ss220</groupId>
+            <artifactId>port-game-server-tcp</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -45,24 +60,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mariadb.jdbc</groupId>
-            <artifactId>mariadb-java-client</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

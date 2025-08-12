@@ -1,7 +1,7 @@
 package club.ss220.manager.resolvers;
 
 import club.ss220.core.config.GameConfig;
-import club.ss220.core.model.GameServer;
+import club.ss220.core.shared.GameServerData;
 import io.github.freya022.botcommands.api.commands.application.slash.options.SlashCommandOption;
 import io.github.freya022.botcommands.api.core.service.annotations.Resolver;
 import io.github.freya022.botcommands.api.parameters.ClassParameterResolver;
@@ -18,13 +18,13 @@ import java.util.Collection;
 
 @Resolver
 public class GameServerResolver
-        extends ClassParameterResolver<GameServerResolver, GameServer>
-        implements SlashParameterResolver<GameServerResolver, GameServer> {
+        extends ClassParameterResolver<GameServerResolver, GameServerData>
+        implements SlashParameterResolver<GameServerResolver, GameServerData> {
 
     private final GameConfig gameConfig;
 
     public GameServerResolver(GameConfig gameConfig) {
-        super(GameServer.class);
+        super(GameServerData.class);
         this.gameConfig = gameConfig;
     }
 
@@ -38,13 +38,13 @@ public class GameServerResolver
     @Override
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
         return gameConfig.getServers().stream()
-                .map(server -> new Command.Choice(server.getFullName(), server.getName()))
+                .map(server -> new Command.Choice(server.fullName(), server.getName()))
                 .toList();
     }
 
     @Nullable
     @Override
-    public GameServer resolve(@NotNull SlashCommandOption option,
+    public GameServerData resolve(@NotNull SlashCommandOption option,
                               @NotNull CommandInteractionPayload event,
                               @NotNull OptionMapping optionMapping) {
         return gameConfig.getServerByName(optionMapping.getAsString()).orElse(null);

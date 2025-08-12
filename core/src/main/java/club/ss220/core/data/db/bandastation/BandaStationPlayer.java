@@ -10,6 +10,7 @@ import java.util.Map;
 @Data
 @Entity
 @Table(name = "player")
+@Deprecated
 public class BandaStationPlayer {
 
     @Id

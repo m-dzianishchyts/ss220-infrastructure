@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+@Deprecated
 public class ServerResponse {
 
     protected final Map<String, Object> data;

@@ -6,6 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@Deprecated
 @Entity
 @Table(name = "ban")
 @Data

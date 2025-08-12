@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Deprecated
 @Repository
 public interface ParadiseBanRepository extends JpaRepository<ParadiseBan, Integer> {
 

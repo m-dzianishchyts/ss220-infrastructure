@@ -1,0 +1,40 @@
+package club.ss220.core.shared;
+
+import jakarta.validation.constraints.NotNull;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+public abstract class PlayerExperienceData {
+
+    private final TreeMap<RoleCategory, Duration> exp;
+
+    public PlayerExperienceData(@NotNull Map<RoleCategory, Duration> exp) {
+        this.exp = fillExp(exp);
+    }
+
+    public abstract List<RoleCategory> getRelevantRoles();
+
+    public Optional<Duration> getForRole(RoleCategory role) {
+        return Optional.ofNullable(exp.get(role));
+    }
+
+    public TreeMap<RoleCategory, Duration> getAll() {
+        return new TreeMap<>(exp);
+    }
+
+    private TreeMap<RoleCategory, Duration> fillExp(Map<RoleCategory, Duration> exp) {
+        return getRelevantRoles().stream()
+                .map(role -> Map.entry(role, exp.getOrDefault(role, Duration.ZERO)))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        Duration::plus,
+                        TreeMap::new
+                ));
+    }
+}

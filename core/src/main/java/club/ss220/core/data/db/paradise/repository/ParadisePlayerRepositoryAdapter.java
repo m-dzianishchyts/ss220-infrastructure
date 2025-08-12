@@ -3,13 +3,16 @@ package club.ss220.core.data.db.paradise.repository;
 import club.ss220.core.config.GameConfig;
 import club.ss220.core.data.integration.game.PlayerRepositoryAdapter;
 import club.ss220.core.data.mapper.Mappers;
-import club.ss220.core.model.Player;
+import club.ss220.core.shared.Player;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+@Deprecated
 @Repository
+@ConditionalOnBean(ParadisePlayerRepository.class)
 @Qualifier(GameConfig.BUILD_PARADISE)
 public class ParadisePlayerRepositoryAdapter implements PlayerRepositoryAdapter {
 
