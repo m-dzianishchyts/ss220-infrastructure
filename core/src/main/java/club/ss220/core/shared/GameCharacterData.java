@@ -40,7 +40,7 @@ public record GameCharacterData(
         public static Gender fromValue(String value) {
             try {
                 return Gender.valueOf(value.toUpperCase());
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException _) {
                 return OTHER;
             }
         }
@@ -62,7 +62,8 @@ public record GameCharacterData(
         UNATHI("Unathi"),
         VOX("Vox"),
         VULPKANIN("Vulpkanin"),
-        NUCLEATION("Nucleation");
+        NUCLEATION("Nucleation"),
+        SERPENTID("Serpentid");
 
         private final String name;
 
