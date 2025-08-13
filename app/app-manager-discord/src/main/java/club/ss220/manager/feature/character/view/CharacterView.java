@@ -3,9 +3,10 @@ package club.ss220.manager.feature.character.view;
 import club.ss220.core.shared.GameBuild;
 import club.ss220.core.shared.GameCharacterData;
 import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
 import club.ss220.manager.presentation.Senders;
 import club.ss220.manager.presentation.UiConstants;
+import club.ss220.manager.shared.pagination.PageRenderer;
+import club.ss220.manager.shared.pagination.PaginatedContext;
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -16,16 +17,10 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class CharacterView {
+public class CharacterView implements PageRenderer<GameCharacterData> {
 
     private final Embeds embeds;
     private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderCharactersInfo(InteractionHook hook, List<GameCharacterData> characters) {
-        MessageEmbed embed = createCharactersInfoEmbed(characters);
-        senders.sendEmbedEphemeral(hook, embed);
-    }
 
     public void renderNoCharactersFound(InteractionHook hook, String query) {
         MessageEmbed embed = embeds.error("Персонажи по запросу '" + query + "' не найдены.");
@@ -37,24 +32,19 @@ public class CharacterView {
         senders.sendEmbedEphemeral(hook, embed);
     }
 
-    private MessageEmbed createCharactersInfoEmbed(List<GameCharacterData> characters) {
-        List<MessageEmbed.Field> fields = characters.stream().limit(MessageEmbed.MAX_FIELD_AMOUNT)
-                .map(character -> new MessageEmbed.Field(character.realName(), character.ckey(), true))
+    @Override
+    public MessageEmbed render(PaginatedContext<GameCharacterData> ctx) {
+        List<GameCharacterData> pageItems = ctx.pageItems();
+
+        List<MessageEmbed.Field> fields = pageItems.stream()
+                .map(ch -> new MessageEmbed.Field(ch.realName(), ch.ckey(), true))
                 .toList();
 
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Информация о персонажах");
-        embed.getFields().addAll(fields);
-
-        if (characters.size() > fields.size()) {
-            String format = "Еще {0, plural,"
-                            + " one{# персонаж не отображен}"
-                            + " few{# персонажа не отображено}"
-                            + " many{# персонажей не отображено}"
-                            + " other{# персонажей не отображено}}.";
-            embed.setFooter(formatters.formatPlural(format, characters.size() - fields.size()));
-        }
-
-        embed.setColor(UiConstants.COLOR_INFO);
-        return embed.build();
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setTitle("Информация о персонажах");
+        embedBuilder.getFields().addAll(fields);
+        embedBuilder.setFooter(paginationFooter(ctx));
+        embedBuilder.setColor(UiConstants.COLOR_INFO);
+        return embedBuilder.build();
     }
 }
