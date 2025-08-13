@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -102,7 +103,7 @@ public class Senders {
         }
 
         String fileName = "stacktrace_" + LocalDateTime.now() + ".txt";
-        try (FileUpload stacktraceFile = FileUpload.fromData(stacktrace.getBytes(), fileName)) {
+        try (FileUpload stacktraceFile = FileUpload.fromData(stacktrace.getBytes(StandardCharsets.UTF_8), fileName)) {
             textChannelById.sendMessageEmbeds(messageEmbed)
                     .addFiles(stacktraceFile)
                     .setAllowedMentions(Collections.emptyList())
