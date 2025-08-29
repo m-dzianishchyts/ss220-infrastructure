@@ -47,8 +47,8 @@ public record BandaStationOnlineStaffStatusPresentation(
     private static Duration parseAfk(Map<String, Object> data) {
         return Optional.ofNullable(data.get(AFK_PROPERTY))
                 .map(String::valueOf)
-                .map(Integer::parseInt)
-                .map(deciseconds -> Duration.ofMillis(deciseconds * 100L))
+                .map(Double::parseDouble)
+                .map(deciseconds -> Duration.ofMillis(deciseconds.longValue() * 100))
                 .orElseThrow(() -> propertyNotFound(AFK_PROPERTY));
     }
 
