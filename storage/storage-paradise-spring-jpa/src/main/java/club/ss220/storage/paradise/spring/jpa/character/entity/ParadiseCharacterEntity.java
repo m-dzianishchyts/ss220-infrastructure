@@ -1,16 +1,21 @@
 package club.ss220.storage.paradise.spring.jpa.character.entity;
 
 import club.ss220.core.shared.GameCharacterData;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
 @Table(name = "characters")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class ParadiseCharacterEntity {
 
     @Id

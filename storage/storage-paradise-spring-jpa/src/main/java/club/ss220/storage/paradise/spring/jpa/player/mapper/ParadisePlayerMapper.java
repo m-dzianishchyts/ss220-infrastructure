@@ -1,16 +1,16 @@
 package club.ss220.storage.paradise.spring.jpa.player.mapper;
 
-import club.ss220.storage.paradise.spring.jpa.character.mapper.ParadiseCharacterMapper;
-import club.ss220.storage.paradise.spring.jpa.player.entity.ParadisePlayerEntity;
 import club.ss220.core.shared.PlayerData;
 import club.ss220.core.shared.PlayerExperienceData;
 import club.ss220.core.shared.RoleCategory;
+import club.ss220.storage.paradise.spring.jpa.character.mapper.ParadiseCharacterMapper;
+import club.ss220.storage.paradise.spring.jpa.player.entity.ParadisePlayerEntity;
+import lombok.SneakyThrows;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -25,13 +25,10 @@ public interface ParadisePlayerMapper {
     @Mapping(target = "exp", source = "exp", qualifiedByName = "mapRoleTime")
     PlayerData toPlayerData(ParadisePlayerEntity player);
 
+    @SneakyThrows
     @Named("ipToInet")
     default InetAddress ipToInet(String ip) {
-        try {
-            return InetAddress.getByName(ip);
-        } catch (UnknownHostException e) {
-            throw new IllegalArgumentException("Invalid IP value: " + ip, e);
-        }
+        return InetAddress.getByName(ip);
     }
 
     @Named("mapRoleTime")
