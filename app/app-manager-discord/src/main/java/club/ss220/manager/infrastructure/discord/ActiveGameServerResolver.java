@@ -40,7 +40,7 @@ public class ActiveGameServerResolver
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
         return gameConfig.getServers().stream()
                 .filter(GameServerData::active)
-                .map(s -> new Command.Choice(s.fullName(), s.ip().getHostAddress() + ":" + s.port()))
+                .map(s -> new Command.Choice(s.fullName(), s.id()))
                 .toList();
     }
 
@@ -49,9 +49,6 @@ public class ActiveGameServerResolver
     public ActiveGameServerData resolve(@NotNull SlashCommandOption option,
                                   @NotNull CommandInteractionPayload event,
                                   @NotNull OptionMapping optionMapping) {
-        String[] address = optionMapping.getAsString().split(":");
-        String host = address[0];
-        int port = Integer.parseInt(address[1]);
-        return new ActiveGameServerData(gameConfig.getServerByAddress(host, port).orElseThrow());
+        return new ActiveGameServerData(gameConfig.getServerById(optionMapping.getAsString()).orElseThrow());
     }
 }

@@ -6,9 +6,7 @@ import io.github.freya022.botcommands.api.commands.application.ApplicationComman
 import io.github.freya022.botcommands.api.commands.application.slash.GuildSlashEvent;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.JDASlashCommand;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Command
 @AllArgsConstructor
 public class StaffCommand extends ApplicationCommand {
@@ -17,8 +15,6 @@ public class StaffCommand extends ApplicationCommand {
 
     @JDASlashCommand(name = "staff", description = "Показать команду проекта онлайн.")
     public void onSlashInteraction(GuildSlashEvent event) {
-        log.debug("Executing /staff command");
-
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
         staffController.showOnlineStaff(event.getHook());

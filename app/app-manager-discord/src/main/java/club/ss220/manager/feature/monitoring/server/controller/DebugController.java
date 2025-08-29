@@ -22,7 +22,7 @@ public class DebugController {
             GameServerStatusData serverStatus = getServerStatus.execute(server);
             view.renderServerStatus(hook, server, serverStatus);
 
-            log.debug("Displayed debug info for server {}", server.fullName());
+            log.debug("Displayed debug info for server {}", server.id());
         } catch (Exception e) {
             throw new RuntimeException("Error displaying server debug info for server " + server, e);
         }

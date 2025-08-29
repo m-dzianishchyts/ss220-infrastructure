@@ -50,12 +50,16 @@ logging:
   logback:
     rollingpolicy:
       max-file-size: 10MB
-      max-history: 7
       total-size-cap: 1GB
-      clean-history-on-start: true
       file-name-pattern: ./log/archive/manager-%d{yyyy-MM-dd}.%i.log
   level:
     root: INFO
+    club.ss220.manager: INFO
+    org.springframework: INFO
+    net.dv8tion.jda: INFO
+    com.zaxxer.hikari: INFO
+    org.flywaydb: WARN
+    io.github.freya022.botcommands: DEBUG
   discord:
     dispatchChannelId: 0
     dispatchInterval: 10

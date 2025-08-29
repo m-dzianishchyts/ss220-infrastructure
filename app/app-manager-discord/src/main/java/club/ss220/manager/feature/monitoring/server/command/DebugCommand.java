@@ -10,9 +10,7 @@ import io.github.freya022.botcommands.api.commands.application.slash.annotations
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.SlashOption;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.TopLevelSlashCommandData;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Command
 @AllArgsConstructor
 public class DebugCommand extends ApplicationCommand {
@@ -24,11 +22,9 @@ public class DebugCommand extends ApplicationCommand {
     public void onSlashInteraction(GuildSlashEvent event,
                                    @SlashOption(description = "Игровой сервер.", usePredefinedChoices = true)
                                    ActiveGameServerData server) {
-        GameServerData activeServer = server.server();
-        log.debug("Executing /debug command, server: {}", activeServer.fullName());
-
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
+        GameServerData activeServer = server.server();
         debugController.showServerDebugInfo(event.getHook(), activeServer);
     }
 }

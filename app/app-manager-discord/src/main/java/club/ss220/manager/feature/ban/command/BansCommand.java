@@ -12,9 +12,7 @@ import io.github.freya022.botcommands.api.commands.application.slash.annotations
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.TopLevelSlashCommandData;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Command
 @AllArgsConstructor
 public class BansCommand extends ApplicationCommand {
@@ -48,10 +46,9 @@ public class BansCommand extends ApplicationCommand {
                                          @Nullable
                                          @SlashOption(description = "Снятые.")
                                          Boolean unbanned) {
-        log.debug("Executing /bans command");
-
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
-        bansController.showBans(event.getHook(), playerTarget, adminTarget, server, roundId, permanent, banType, expired, unbanned);
+        bansController.showBans(event.getHook(), playerTarget, adminTarget,
+                                server, roundId, permanent, banType, expired, unbanned);
     }
 }

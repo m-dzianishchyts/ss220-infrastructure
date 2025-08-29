@@ -9,9 +9,7 @@ import io.github.freya022.botcommands.api.commands.application.slash.GuildSlashE
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.JDASlashCommand;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.SlashOption;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Command
 @AllArgsConstructor
 public class WhoCommand extends ApplicationCommand {
@@ -22,11 +20,9 @@ public class WhoCommand extends ApplicationCommand {
     public void onSlashInteraction(GuildSlashEvent event,
                                    @SlashOption(description = "Игровой сервер.", usePredefinedChoices = true)
                                    ActiveGameServerData server) {
-        GameServerData activeServer = server.server();
-        log.debug("Executing /who command, server: {}", activeServer.fullName());
-
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
+        GameServerData activeServer = server.server();
         whoController.showPlayersOnServer(event.getHook(), activeServer);
     }
 }

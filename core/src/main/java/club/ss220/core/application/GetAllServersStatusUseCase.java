@@ -28,7 +28,7 @@ public class GetAllServersStatusUseCase {
             try {
                 result.put(server, gameServerPort.getServerStatus(server));
             } catch (Exception e) {
-                log.error("Error getting server status for server: {}", server.fullName(), e);
+                log.error("Error getting server status for server: {}", server.id(), e);
             }
         });
         return result;

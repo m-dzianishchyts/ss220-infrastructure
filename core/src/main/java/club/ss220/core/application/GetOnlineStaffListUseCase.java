@@ -29,7 +29,7 @@ public class GetOnlineStaffListUseCase {
             try {
                 result.put(server, gameServerPort.getStaffList(server));
             } catch (GameServerPortException e) {
-                log.error("Error getting staff list for server: {}", server.fullName(), e);
+                log.error("Error getting staff list for server: {}", server.id(), e);
             }
         });
         return result;

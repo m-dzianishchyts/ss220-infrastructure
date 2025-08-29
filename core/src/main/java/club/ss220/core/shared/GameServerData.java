@@ -15,7 +15,7 @@ import java.net.Inet4Address;
 @Accessors(fluent = true)
 public class GameServerData {
 
-    @Nullable
+    @NotNull
     private final String id;
 
     @NotBlank
@@ -43,7 +43,7 @@ public class GameServerData {
     @Nullable
     private final String key;
 
-    public GameServerData(@Nullable String id, @NotNull String name, @NotNull GameBuild build,
+    public GameServerData(@NotNull String id, @NotNull String name, @NotNull GameBuild build,
                           @DefaultValue("true") @NotNull Boolean active,
                           @Nullable String host, @Nullable Inet4Address ip, @NotNull Integer port,
                           @Nullable String key) {

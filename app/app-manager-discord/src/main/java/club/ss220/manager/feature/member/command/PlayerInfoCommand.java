@@ -12,10 +12,7 @@ import io.github.freya022.botcommands.api.commands.application.slash.annotations
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.SlashOption;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.TopLevelSlashCommandData;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.User;
 
-@Slf4j
 @Command
 @AllArgsConstructor
 public class PlayerInfoCommand extends ApplicationCommand {
@@ -27,21 +24,15 @@ public class PlayerInfoCommand extends ApplicationCommand {
     public void onSlashInteraction(GuildSlashEvent event,
                                    @SlashOption(description = "Пользователь Discord/Discord ID/CKEY.")
                                    MemberTarget target) {
-        log.debug("Executing /player command, target: {}", target);
-        event.deferReply(true).queue();
-
-        User user = event.getUser();
-        memberInfoController.showMemberInfo(event.getHook(), user, target);
+        boolean ephemeral = true;
+        event.deferReply(ephemeral).queue();
+        memberInfoController.showMemberInfo(event.getHook(), event.getUser(), target);
     }
 
     @JDAUserCommand(name = "Информация об игроке", scope = CommandScope.GUILD)
     public void onUserInteraction(GuildUserEvent event) {
-        User target = event.getTarget();
-        log.debug("Executing user interaction 'Информация об игроке', target: {}", target);
-
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
-        User user = event.getUser();
-        memberInfoController.showMemberInfo(event.getHook(), user, target);
+        memberInfoController.showMemberInfo(event.getHook(), event.getUser(), event.getTarget());
     }
 }
