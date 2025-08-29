@@ -2,7 +2,7 @@ package club.ss220.core.application;
 
 import club.ss220.core.shared.GameBuild;
 import club.ss220.core.shared.GameServerData;
-import club.ss220.core.shared.OnlineAdminStatusData;
+import club.ss220.core.shared.OnlineStaffStatusData;
 import club.ss220.core.spi.GameServerPort;
 import club.ss220.core.spi.exception.GameServerPortException;
 import lombok.RequiredArgsConstructor;
@@ -14,22 +14,22 @@ import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
-public class GetOnlineAdminsListUseCase {
+public class GetOnlineStaffListUseCase {
 
     private final Map<GameBuild, GameServerPort> gameServerPorts;
 
-    public Map<GameServerData, List<OnlineAdminStatusData>> execute(List<GameServerData> servers) {
+    public Map<GameServerData, List<OnlineStaffStatusData>> execute(List<GameServerData> servers) {
         if (servers == null || servers.isEmpty()) {
             return Map.of();
         }
 
-        Map<GameServerData, List<OnlineAdminStatusData>> result = new HashMap<>();
+        Map<GameServerData, List<OnlineStaffStatusData>> result = new HashMap<>();
         servers.stream().filter(GameServerData::active).forEach(server -> {
             GameServerPort gameServerPort = gameServerPorts.get(server.build());
             try {
-                result.put(server, gameServerPort.getAdminsList(server));
+                result.put(server, gameServerPort.getStaffList(server));
             } catch (GameServerPortException e) {
-                log.error("Error getting admins list for server: {}", server.fullName(), e);
+                log.error("Error getting staff list for server: {}", server.fullName(), e);
             }
         });
         return result;

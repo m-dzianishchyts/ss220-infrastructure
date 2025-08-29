@@ -14,7 +14,7 @@ public record GameServerStatusData(
         Integer players,
         @NotNull
         @PositiveOrZero
-        Integer admins,
+        Integer staff,
         @NotNull
         Duration roundDuration,
         @NotNull

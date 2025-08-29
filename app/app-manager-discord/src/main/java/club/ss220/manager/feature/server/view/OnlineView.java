@@ -39,7 +39,7 @@ public class OnlineView {
 
         EmbedBuilder embed = new EmbedBuilder().setTitle("Текущий онлайн: " + totalPlayers);
         embed.getFields().addAll(fields);
-        embed.setFooter("(*) - администрация");
+        embed.setFooter("(*) - команда проекта");
         embed.setColor(UiConstants.COLOR_INFO);
         return embed.build();
     }
@@ -67,7 +67,7 @@ public class OnlineView {
         return "**%s:** %d (%d) - %s".formatted(
                 server.name(),
                 status.players(),
-                status.admins(),
+                status.staff(),
                 formatters.formatRoundDuration(status.roundDuration())
         );
     }

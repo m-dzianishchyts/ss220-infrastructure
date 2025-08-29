@@ -1,6 +1,6 @@
 package club.ss220.port.gameserver.tcp.paradise.presentation;
 
-import club.ss220.core.shared.OnlineAdminStatusData;
+import club.ss220.core.shared.OnlineStaffStatusData;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
@@ -9,12 +9,12 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
-public record ParadiseOnlineAdminStatusPresentation(
+public record ParadiseOnlineStaffStatusPresentation(
         @NotNull String ckey,
         @NotNull String key,
         @NotNull String rank,
         @NotNull Duration afkDuration,
-        @NotNull OnlineAdminStatusData.StealthMode stealthMode,
+        @NotNull OnlineStaffStatusData.StealthMode stealthMode,
         @Nullable String stealthKey
 ) {
 
@@ -26,7 +26,7 @@ public record ParadiseOnlineAdminStatusPresentation(
     public static final String STEALTH_KEY_PROPERTY = "stealth_key";
 
     @JsonCreator
-    public ParadiseOnlineAdminStatusPresentation(Map<String, Object> data) {
+    public ParadiseOnlineStaffStatusPresentation(Map<String, Object> data) {
         this(
                 getString(data, CKEY_PROPERTY),
                 getString(data, KEY_PROPERTY),
@@ -47,19 +47,19 @@ public record ParadiseOnlineAdminStatusPresentation(
         return Optional.ofNullable(data.get(AFK_PROPERTY))
                 .map(String::valueOf)
                 .map(Integer::parseInt)
-                .map(deciseconds -> Duration.ofMillis(deciseconds * 100))
+                .map(deciseconds -> Duration.ofMillis(deciseconds * 100L))
                 .orElseThrow(() -> propertyNotFound(AFK_PROPERTY));
     }
 
-    private static OnlineAdminStatusData.StealthMode parseStealthMode(Map<String, Object> data) {
+    private static OnlineStaffStatusData.StealthMode parseStealthMode(Map<String, Object> data) {
         String value = getString(data, STEALTH_PROPERTY).toLowerCase();
         if (value.contains("stealth")) {
-            return OnlineAdminStatusData.StealthMode.STEALTH;
+            return OnlineStaffStatusData.StealthMode.STEALTH;
         }
         if (value.contains("bb")) {
-            return OnlineAdminStatusData.StealthMode.BIG_BROTHER;
+            return OnlineStaffStatusData.StealthMode.BIG_BROTHER;
         }
-        return OnlineAdminStatusData.StealthMode.NONE;
+        return OnlineStaffStatusData.StealthMode.NONE;
     }
 
     private static RuntimeException propertyNotFound(String property) {

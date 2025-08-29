@@ -3,8 +3,8 @@ package club.ss220.manager.config;
 import club.ss220.core.application.GetAllServersStatusUseCase;
 import club.ss220.core.application.GetBansUseCase;
 import club.ss220.core.application.GetMemberDataUseCase;
-import club.ss220.core.application.GetOnlineAdminsListUseCase;
 import club.ss220.core.application.GetOnlinePlayersListUseCase;
+import club.ss220.core.application.GetOnlineStaffListUseCase;
 import club.ss220.core.application.GetServerStatusUseCase;
 import club.ss220.core.application.SearchCharactersUseCase;
 import club.ss220.core.shared.GameBuild;
@@ -38,8 +38,8 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public GetOnlineAdminsListUseCase getAllAdminsListUseCase(Map<GameBuild, GameServerPort> gameApiClients) {
-        return new GetOnlineAdminsListUseCase(gameApiClients);
+    public GetOnlineStaffListUseCase getOnlineStaffListUseCase(Map<GameBuild, GameServerPort> gameApiClients) {
+        return new GetOnlineStaffListUseCase(gameApiClients);
     }
 
     @Bean

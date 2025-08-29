@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 public interface ParadiseServerStatusMapper {
 
     @Mapping(target = "players", expression = "java(presentation.players())")
-    @Mapping(target = "admins", expression = "java(presentation.admins())")
+    @Mapping(target = "staff", expression = "java(presentation.staff())")
     @Mapping(target = "rawData", expression = "java(presentation.rawData())")
     @Mapping(target = "roundDuration", expression = "java(presentation.roundDuration())")
     GameServerStatusData toGameServerStatusData(ParadiseGameServerStatusPresentation presentation);

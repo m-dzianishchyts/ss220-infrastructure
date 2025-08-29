@@ -1,7 +1,7 @@
-package club.ss220.manager.feature.admin.view;
+package club.ss220.manager.feature.staff.view;
 
 import club.ss220.core.shared.GameServerData;
-import club.ss220.core.shared.OnlineAdminStatusData;
+import club.ss220.core.shared.OnlineStaffStatusData;
 import club.ss220.manager.presentation.Formatters;
 import club.ss220.manager.presentation.GameBuildStyle;
 import club.ss220.manager.presentation.Senders;
@@ -21,29 +21,29 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class AdminsView {
+public class StaffView {
 
     private final Senders senders;
     private final Formatters formatters;
 
-    public void renderOnlineAdmins(InteractionHook hook,
-                                   Map<GameServerData, List<OnlineAdminStatusData>> onlineAdmins) {
-        MessageEmbed embed = createOnlineAdminsEmbed(onlineAdmins);
+    public void renderOnlineStaff(InteractionHook hook,
+                                  Map<GameServerData, List<OnlineStaffStatusData>> onlineStaff) {
+        MessageEmbed embed = createOnlineStaffEmbed(onlineStaff);
         senders.sendEmbedEphemeral(hook, embed);
     }
 
-    private MessageEmbed createOnlineAdminsEmbed(Map<GameServerData, List<OnlineAdminStatusData>> serversAdmins) {
-        List<MessageEmbed.Field> fields = groupByBuildStyle(serversAdmins).entrySet().stream()
-                .map(e -> buildAdminsField(e.getKey(), e.getValue()))
+    private MessageEmbed createOnlineStaffEmbed(Map<GameServerData, List<OnlineStaffStatusData>> serversStaff) {
+        List<MessageEmbed.Field> fields = groupByBuildStyle(serversStaff).entrySet().stream()
+                .map(e -> buildStaffField(e.getKey(), e.getValue()))
                 .toList();
 
-        long totalAdmins = serversAdmins.values().stream()
+        long totalStaff = serversStaff.values().stream()
                 .flatMap(Collection::stream)
-                .map(OnlineAdminStatusData::ckey)
+                .map(OnlineStaffStatusData::ckey)
                 .distinct()
                 .count();
 
-        EmbedBuilder embedBuilder = new EmbedBuilder().setTitle("Админы онлайн: " + totalAdmins);
+        EmbedBuilder embedBuilder = new EmbedBuilder().setTitle("Онлайн команды проекта: " + totalStaff);
         embedBuilder.getFields().addAll(fields);
         embedBuilder.setColor(UiConstants.COLOR_INFO);
         return embedBuilder.build();
@@ -59,23 +59,23 @@ public class AdminsView {
                 ));
     }
 
-    private MessageEmbed.Field buildAdminsField(GameBuildStyle buildStyle,
-                                                Map<GameServerData, List<OnlineAdminStatusData>> serversAdmins) {
+    private MessageEmbed.Field buildStaffField(GameBuildStyle buildStyle,
+                                               Map<GameServerData, List<OnlineStaffStatusData>> serversStaff) {
         String title = buildStyle.getEmoji().getFormatted() + " " + buildStyle.getName();
-        String value = serversAdmins.entrySet().stream()
-                .map(e -> serverAdminsBlock(e.getKey(), e.getValue()))
+        String value = serversStaff.entrySet().stream()
+                .map(e -> serverStaffBlock(e.getKey(), e.getValue()))
                 .collect(Collectors.joining("\n"));
         return new MessageEmbed.Field(title, value, false);
     }
 
-    private String serverAdminsBlock(GameServerData server, List<OnlineAdminStatusData> admins) {
+    private String serverStaffBlock(GameServerData server, List<OnlineStaffStatusData> staff) {
         StringBuilder builder = new StringBuilder();
         builder.append("**").append(server.name()).append("**\n");
-        if (admins.isEmpty()) {
-            builder.append(UiConstants.SPACE_FILLER + "Нет админов онлайн.");
+        if (staff.isEmpty()) {
+            builder.append(UiConstants.SPACE_FILLER + "Нет никого из команды проекта.");
             return builder.toString();
         }
-        admins.forEach(a -> {
+        staff.forEach(a -> {
             String ranks = String.join(", ", a.ranks());
             String key = formatters.escape(a.key());
             builder.append(UiConstants.SPACE_FILLER).append(key).append(" - ").append(ranks).append("\n");

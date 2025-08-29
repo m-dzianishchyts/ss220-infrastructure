@@ -1,6 +1,6 @@
-package club.ss220.manager.feature.admin.command;
+package club.ss220.manager.feature.staff.command;
 
-import club.ss220.manager.feature.admin.controller.AdminsController;
+import club.ss220.manager.feature.staff.controller.StaffController;
 import io.github.freya022.botcommands.api.commands.annotations.Command;
 import io.github.freya022.botcommands.api.commands.application.ApplicationCommand;
 import io.github.freya022.botcommands.api.commands.application.slash.GuildSlashEvent;
@@ -11,16 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Command
 @AllArgsConstructor
-public class AdminsCommand extends ApplicationCommand {
+public class StaffCommand extends ApplicationCommand {
 
-    private final AdminsController adminsController;
+    private final StaffController staffController;
 
-    @JDASlashCommand(name = "admins", description = "Показать админов онлайн.")
+    @JDASlashCommand(name = "staff", description = "Показать команду проекта онлайн.")
     public void onSlashInteraction(GuildSlashEvent event) {
-        log.debug("Executing /admins command");
+        log.debug("Executing /staff command");
 
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
-        adminsController.showOnlineAdmins(event.getHook());
+        staffController.showOnlineStaff(event.getHook());
     }
 }

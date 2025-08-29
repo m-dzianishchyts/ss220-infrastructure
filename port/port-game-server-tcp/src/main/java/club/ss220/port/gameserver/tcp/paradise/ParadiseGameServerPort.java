@@ -3,11 +3,11 @@ package club.ss220.port.gameserver.tcp.paradise;
 import club.ss220.core.config.GameConfig;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.GameServerStatusData;
-import club.ss220.core.shared.OnlineAdminStatusData;
-import club.ss220.port.gameserver.tcp.paradise.mapper.ParadiseOnlineAdminStatusMapper;
+import club.ss220.core.shared.OnlineStaffStatusData;
+import club.ss220.port.gameserver.tcp.paradise.mapper.ParadiseOnlineStaffStatusMapper;
 import club.ss220.port.gameserver.tcp.paradise.mapper.ParadiseServerStatusMapper;
 import club.ss220.port.gameserver.tcp.paradise.presentation.ParadiseGameServerStatusPresentation;
-import club.ss220.port.gameserver.tcp.paradise.presentation.ParadiseOnlineAdminStatusPresentation;
+import club.ss220.port.gameserver.tcp.paradise.presentation.ParadiseOnlineStaffStatusPresentation;
 import club.ss220.port.gameserver.tcp.support.AbstractTcpGameServerPort;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +25,10 @@ public class ParadiseGameServerPort extends AbstractTcpGameServerPort {
 
     public static final String PLAYER_LIST_COMMAND = "playerlist";
     public static final String SERVER_STATUS_COMMAND = "status";
-    public static final String ADMIN_LIST_COMMAND = "adminwho";
+    public static final String STAFF_LIST_COMMAND = "adminwho";
 
     private final ParadiseServerStatusMapper statusMapper;
-    private final ParadiseOnlineAdminStatusMapper onlineAdminStatusMapper;
+    private final ParadiseOnlineStaffStatusMapper onlineStaffStatusMapper;
 
     @Override
     public List<String> getPlayersList(GameServerData gameServer) {
@@ -43,11 +43,11 @@ public class ParadiseGameServerPort extends AbstractTcpGameServerPort {
     }
 
     @Override
-    public List<OnlineAdminStatusData> getAdminsList(GameServerData gameServer) {
-        TypeReference<List<ParadiseOnlineAdminStatusPresentation>> typeRef = new TypeReference<>() { };
-        var presentation = callServer(gameServer, ADMIN_LIST_COMMAND, typeRef);
+    public List<OnlineStaffStatusData> getStaffList(GameServerData gameServer) {
+        TypeReference<List<ParadiseOnlineStaffStatusPresentation>> typeRef = new TypeReference<>() { };
+        var presentation = callServer(gameServer, STAFF_LIST_COMMAND, typeRef);
         return presentation.stream()
-                .map(onlineAdminStatusMapper::toOnlineAdminStatusData)
+                .map(onlineStaffStatusMapper::toOnlineStaffStatusData)
                 .toList();
     }
 }

@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 public interface BandaStationServerStatusMapper {
 
     @Mapping(target = "players", expression = "java(presentation.players())")
-    @Mapping(target = "admins", expression = "java(presentation.admins())")
+    @Mapping(target = "staff", expression = "java(presentation.staff())")
     @Mapping(target = "roundDuration", expression = "java(presentation.roundDuration())")
     @Mapping(target = "rawData", expression = "java(presentation.rawData())")
     GameServerStatusData toGameServerStatusData(BandaStationGameServerStatusPresentation presentation);

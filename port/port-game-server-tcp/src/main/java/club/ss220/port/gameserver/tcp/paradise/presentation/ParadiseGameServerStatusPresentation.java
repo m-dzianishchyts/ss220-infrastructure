@@ -11,7 +11,7 @@ import java.util.Optional;
 public class ParadiseGameServerStatusPresentation extends GameServerResponse {
 
     public static final String PLAYERS_PROPERTY = "players";
-    public static final String ADMINS_PROPERTY = "admins";
+    public static final String STAFF_PROPERTY = "admins";
     public static final String ROUNDTIME_PROPERTY = "roundtime";
 
     public int players() {
@@ -22,8 +22,8 @@ public class ParadiseGameServerStatusPresentation extends GameServerResponse {
                 .orElseThrow(() -> propertyNotFound(property));
     }
 
-    public int admins() {
-        String property = ADMINS_PROPERTY;
+    public int staff() {
+        String property = STAFF_PROPERTY;
         return Optional.ofNullable(data.get(property))
                 .map(String::valueOf)
                 .map(Integer::parseInt)
