@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public class ValidationUtils {
+public class ValidationService {
 
     private final Validator validator;
 
-    public ValidationUtils() {
+    public ValidationService() {
         try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
             validator = factory.getValidator();
         }

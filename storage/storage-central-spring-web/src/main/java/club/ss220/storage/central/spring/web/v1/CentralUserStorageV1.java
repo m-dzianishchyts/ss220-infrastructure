@@ -1,11 +1,11 @@
 package club.ss220.storage.central.spring.web.v1;
 
-import club.ss220.storage.central.spring.web.mapper.UserMapper;
-import club.ss220.storage.central.spring.web.v1.presentation.UserPresentationV1;
 import club.ss220.core.shared.UserData;
 import club.ss220.core.spi.UserStorage;
+import club.ss220.core.util.ValidationService;
+import club.ss220.storage.central.spring.web.mapper.UserMapper;
 import club.ss220.storage.central.spring.web.v1.exception.CentralApiException;
-import club.ss220.core.util.ValidationUtils;
+import club.ss220.storage.central.spring.web.v1.presentation.UserPresentationV1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -23,11 +23,11 @@ public class CentralUserStorageV1 implements UserStorage {
     private final RestTemplate restTemplate;
     private final String baseUrl;
     private final UserMapper userMapper;
-    private final ValidationUtils validationUtils;
+    private final ValidationService validationService;
 
     public CentralUserStorageV1(@Value("${application.api.central.endpoint}") String baseUrl,
                                 @Value("${application.api.central.token}") String token,
-                                UserMapper userMapper, ValidationUtils validationUtils) {
+                                UserMapper userMapper, ValidationService validationService) {
         this.baseUrl = baseUrl;
         this.restTemplate = new RestTemplate();
         this.restTemplate.setInterceptors(List.of((request, body, execution) -> {
@@ -37,7 +37,7 @@ public class CentralUserStorageV1 implements UserStorage {
         }));
 
         this.userMapper = userMapper;
-        this.validationUtils = validationUtils;
+        this.validationService = validationService;
     }
 
     public Optional<UserData> getUserByCkey(String ckey) {
@@ -45,9 +45,9 @@ public class CentralUserStorageV1 implements UserStorage {
         try {
             return Optional.ofNullable(restTemplate.getForObject(url, UserPresentationV1.class, ckey))
                     .map(userMapper::toUserData)
-                    .map(validationUtils::validate);
+                    .map(validationService::validate);
 
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (HttpClientErrorException.NotFound _) {
             log.debug("User with ckey {} not found", ckey);
             return Optional.empty();
         } catch (Exception e) {
@@ -60,9 +60,9 @@ public class CentralUserStorageV1 implements UserStorage {
         try {
             return Optional.ofNullable(restTemplate.getForObject(url, UserPresentationV1.class, discordId))
                     .map(userMapper::toUserData)
-                    .map(validationUtils::validate);
+                    .map(validationService::validate);
 
-        } catch (HttpClientErrorException.NotFound e) {
+        } catch (HttpClientErrorException.NotFound _) {
             log.debug("User with Discord ID {} not found", discordId);
             return Optional.empty();
         } catch (Exception e) {

@@ -1,14 +1,15 @@
 package club.ss220.storage.paradise.spring.jpa.ban;
 
-import club.ss220.storage.paradise.spring.jpa.ban.entity.ParadiseBanEntity;
-import club.ss220.storage.paradise.spring.jpa.ban.repository.ParadiseBanJpaRepository;
 import club.ss220.core.shared.BanData;
+import club.ss220.core.shared.GameServerData;
+import club.ss220.core.spi.BanQuery;
 import club.ss220.core.spi.BanStorage;
+import club.ss220.storage.paradise.spring.jpa.ban.mapper.ParadiseBanMapper;
+import club.ss220.storage.paradise.spring.jpa.ban.repository.ParadiseBanJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,45 +20,30 @@ import static club.ss220.core.config.GameConfig.BUILD_PARADISE;
 public class ParadiseJpaBanStorage implements BanStorage {
 
     private final ParadiseBanJpaRepository jpaRepository;
+    private final ParadiseBanMapper banMapper;
 
-    public ParadiseJpaBanStorage(ParadiseBanJpaRepository jpaRepository) {
+    public ParadiseJpaBanStorage(ParadiseBanJpaRepository jpaRepository, ParadiseBanMapper banMapper) {
         this.jpaRepository = jpaRepository;
+        this.banMapper = banMapper;
     }
 
     @Override
     public Optional<BanData> findById(Integer id) {
-        return jpaRepository.findById(id).map(this::toBan);
+        return jpaRepository.findById(id).map(banMapper::toBanData);
     }
 
     @Override
-    public List<BanData> findRecentPlayerBans(String ckey, LocalDateTime since, int page, int size) {
-        var pageable = PageRequest.of(page, size);
-        List<ParadiseBanEntity> bans = jpaRepository.findRecentPlayerBans(ckey, since, pageable);
-        return bans.stream().map(this::toBan).toList();
-    }
-
-    @Override
-    public List<BanData> findPlayerBans(String ckey, int page, int size) {
-        var pageable = PageRequest.of(page, size);
-        List<ParadiseBanEntity> bans = jpaRepository.findPlayerBans(ckey, pageable);
-        return bans.stream().map(this::toBan).toList();
-    }
-
-    @Override
-    public int countBansByCkey(String ckey) {
-        return jpaRepository.countBansByCkey(ckey);
-    }
-
-    private BanData toBan(ParadiseBanEntity ban) {
-        return BanData.builder()
-                .id(ban.getId())
-                .ckey(ban.getCkey())
-                .adminCkey(ban.getAdminCkey())
-                .reason(ban.getReason())
-                .banTime(ban.getBanDatetime())
-                .unbanTime(ban.getUnbanDatetime())
-                .banType(ban.getBanType())
-                .isActive(ban.isActive())
-                .build();
+    public List<BanData> findByQuery(BanQuery query) {
+        GameServerData server = query.getServer();
+        String serverAddress = server != null ? server.ip() + ":" + server.port() : null;
+        String banType = query.getBanType() != null ? query.getBanType().name() : null;
+        PageRequest pageable = PageRequest.of(query.getPage(), query.getPageSize());
+        return jpaRepository.findByQuery(query.getCkey(), query.getAdminCkey(),
+                                         serverAddress, query.getRoundId(),
+                                         query.getUnbanned(), query.getExpired(),
+                                         query.getPermanent(), banType, pageable)
+                .stream()
+                .map(banMapper::toBanData)
+                .toList();
     }
 }

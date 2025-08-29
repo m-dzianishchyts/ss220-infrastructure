@@ -1,7 +1,6 @@
 package club.ss220.manager.infrastructure.discord;
 
-import club.ss220.core.config.GameConfig;
-import club.ss220.core.shared.GameServerData;
+import club.ss220.core.shared.BanData;
 import io.github.freya022.botcommands.api.commands.application.slash.options.SlashCommandOption;
 import io.github.freya022.botcommands.api.core.service.annotations.Resolver;
 import io.github.freya022.botcommands.api.parameters.ClassParameterResolver;
@@ -14,18 +13,16 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 @Resolver
-public class GameServerResolver
-        extends ClassParameterResolver<GameServerResolver, GameServerData>
-        implements SlashParameterResolver<GameServerResolver, GameServerData> {
+public class BanTypeResolver
+        extends ClassParameterResolver<BanTypeResolver, BanData.BanType>
+        implements SlashParameterResolver<BanTypeResolver, BanData.BanType> {
 
-    private final GameConfig gameConfig;
-
-    public GameServerResolver(GameConfig gameConfig) {
-        super(GameServerData.class);
-        this.gameConfig = gameConfig;
+    public BanTypeResolver() {
+        super(BanData.BanType.class);
     }
 
     @NotNull
@@ -37,19 +34,16 @@ public class GameServerResolver
     @NotNull
     @Override
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
-        return gameConfig.getServers().stream()
-                .map(s -> new Command.Choice(s.fullName(), s.ip().getHostAddress() + ":" + s.port()))
+        return Arrays.stream(BanData.BanType.values())
+                .map(banType -> new Command.Choice(banType.name(), banType.name()))
                 .toList();
     }
 
     @Nullable
     @Override
-    public GameServerData resolve(@NotNull SlashCommandOption option,
-                                  @NotNull CommandInteractionPayload event,
-                                  @NotNull OptionMapping optionMapping) {
-        String[] address = optionMapping.getAsString().split(":");
-        String host = address[0];
-        int port = Integer.parseInt(address[1]);
-        return gameConfig.getServerByAddress(host, port).orElseThrow();
+    public BanData.BanType resolve(@NotNull SlashCommandOption option,
+                                   @NotNull CommandInteractionPayload event,
+                                   @NotNull OptionMapping optionMapping) {
+        return BanData.BanType.valueOf(optionMapping.getAsString());
     }
 }

@@ -45,7 +45,7 @@ public class OnlineView {
     }
 
     private <V> Map<GameBuildStyle, Map<GameServerData, V>> groupByBuildStyle(Map<GameServerData, V> map) {
-        Function<GameServerData, GameBuildStyle> serverToStyle = e -> GameBuildStyle.fromName(e.getBuild().getName());
+        Function<GameServerData, GameBuildStyle> serverToStyle = e -> GameBuildStyle.fromName(e.build().getName());
         return map.entrySet().stream()
                 .collect(Collectors.groupingBy(
                         e -> serverToStyle.apply(e.getKey()),
@@ -65,7 +65,7 @@ public class OnlineView {
 
     private String serverOnlineBlock(GameServerData server, GameServerStatusData status) {
         return "**%s:** %d (%d) - %s".formatted(
-                server.getName(),
+                server.name(),
                 status.players(),
                 status.admins(),
                 formatters.formatRoundDuration(status.roundDuration())

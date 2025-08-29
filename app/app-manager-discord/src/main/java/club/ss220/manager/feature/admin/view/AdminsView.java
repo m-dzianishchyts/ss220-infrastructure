@@ -48,7 +48,7 @@ public class AdminsView {
     }
 
     private <V> Map<GameBuildStyle, Map<GameServerData, V>> groupByBuildStyle(Map<GameServerData, V> map) {
-        Function<GameServerData, GameBuildStyle> serverToStyle = e -> GameBuildStyle.fromName(e.getBuild().getName());
+        Function<GameServerData, GameBuildStyle> serverToStyle = e -> GameBuildStyle.fromName(e.build().getName());
         return map.entrySet().stream()
                 .collect(Collectors.groupingBy(
                         e -> serverToStyle.apply(e.getKey()),
@@ -68,7 +68,7 @@ public class AdminsView {
 
     private String serverAdminsBlock(GameServerData server, List<OnlineAdminStatusData> admins) {
         StringBuilder builder = new StringBuilder();
-        builder.append("**").append(server.getName()).append("**\n");
+        builder.append("**").append(server.name()).append("**\n");
         if (admins.isEmpty()) {
             builder.append(UiConstants.SPACE_FILLER + "Нет админов онлайн.");
             return builder.toString();

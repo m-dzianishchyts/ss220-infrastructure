@@ -1,9 +1,9 @@
 package club.ss220.core.application;
 
+import club.ss220.core.shared.GameBuild;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.OnlineAdminStatusData;
 import club.ss220.core.spi.GameServerPort;
-import club.ss220.core.shared.GameBuild;
 import club.ss220.core.spi.exception.GameServerPortException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +24,14 @@ public class GetOnlineAdminsListUseCase {
         }
 
         Map<GameServerData, List<OnlineAdminStatusData>> result = new HashMap<>();
-        for (GameServerData server : servers) {
-            GameServerPort gameServerPort = gameServerPorts.get(server.getBuild());
+        servers.stream().filter(GameServerData::active).forEach(server -> {
+            GameServerPort gameServerPort = gameServerPorts.get(server.build());
             try {
                 result.put(server, gameServerPort.getAdminsList(server));
             } catch (GameServerPortException e) {
                 log.error("Error getting admins list for server: {}", server.fullName(), e);
             }
-        }
+        });
         return result;
     }
 }

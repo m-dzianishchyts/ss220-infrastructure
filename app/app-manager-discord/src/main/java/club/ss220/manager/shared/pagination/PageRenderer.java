@@ -10,7 +10,7 @@ public interface PageRenderer<T> {
     MessageEmbed render(PaginatedContext<T> ctx);
 
     default String paginationFooter(PaginatedContext<T> ctx) {
-        return "Страница " + (ctx.page() + 1) + " из " + ctx.totalPages();
+        return "Всего: " + ctx.totalItems() + " — Страница " + (ctx.page() + 1) + "/" + ctx.totalPages();
     }
 
     default void enrichComponents(PaginatedContext<T> ctx, List<ActionRow> rows) {

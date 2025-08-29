@@ -1,8 +1,8 @@
 package club.ss220.port.gameserver.tcp.support;
 
 import club.ss220.core.shared.GameServerData;
-import club.ss220.core.spi.exception.GameServerPortException;
 import club.ss220.core.spi.GameServerPort;
+import club.ss220.core.spi.exception.GameServerPortException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,7 +36,7 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
 
     protected <T> T executeCommand(GameServerData gameServer, String command, TypeReference<T> typeRef) {
         String fullCommand = buildCommand(gameServer, command);
-        log.debug("Executing topic '{}' on {}:{}", fullCommand, gameServer.getHost(), gameServer.getPort());
+        log.debug("Executing topic '{}' on {}:{}", fullCommand, gameServer.ip(), gameServer.port());
 
         try {
             byte[] responseBytes = sendReceiveData(gameServer, fullCommand);
@@ -57,8 +57,8 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
 
     protected String buildCommand(GameServerData server, String command) {
         StringBuilder sb = new StringBuilder(command);
-        if (server.getKey() != null && !server.getKey().isEmpty()) {
-            sb.append("&key=").append(server.getKey());
+        if (server.key() != null && !server.key().isEmpty()) {
+            sb.append("&key=").append(server.key());
         }
         sb.append("&format=json");
         return sb.toString();
@@ -67,7 +67,7 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
     protected byte[] sendReceiveData(GameServerData server, String command) throws IOException {
         try (Socket socket = new Socket()) {
             socket.setSoTimeout(TIMEOUT_MS);
-            socket.connect(new InetSocketAddress(server.getHost(), server.getPort()), TIMEOUT_MS);
+            socket.connect(new InetSocketAddress(server.ip(), server.port()), TIMEOUT_MS);
 
             byte[] packet = preparePacket(command);
             socket.getOutputStream().write(packet);

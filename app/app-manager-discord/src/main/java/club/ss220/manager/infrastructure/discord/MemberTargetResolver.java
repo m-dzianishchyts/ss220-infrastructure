@@ -19,11 +19,8 @@ public class MemberTargetResolver
         extends ClassParameterResolver<MemberTargetResolver, MemberTarget>
         implements SlashParameterResolver<MemberTargetResolver, MemberTarget> {
 
-    private final ByondUtils byondUtils;
-
-    public MemberTargetResolver(ByondUtils byondUtils) {
+    public MemberTargetResolver() {
         super(MemberTarget.class);
-        this.byondUtils = byondUtils;
     }
 
     @NotNull
@@ -85,7 +82,7 @@ public class MemberTargetResolver
     }
 
     private MemberTarget targetFromCkey(String query) {
-        String ckey = byondUtils.sanitizeCkey(query);
+        String ckey = ByondUtils.sanitizeCkey(query);
         if (ckey.isBlank()) {
             return null;
         }

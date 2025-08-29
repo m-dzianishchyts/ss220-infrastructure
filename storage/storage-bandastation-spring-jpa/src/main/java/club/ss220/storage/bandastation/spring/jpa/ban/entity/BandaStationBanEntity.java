@@ -1,4 +1,4 @@
-package club.ss220.storage.paradise.spring.jpa.ban.entity;
+package club.ss220.storage.bandastation.spring.jpa.ban.entity;
 
 import club.ss220.core.shared.BanData;
 import jakarta.annotation.Nullable;
@@ -21,25 +21,46 @@ import java.time.LocalDateTime;
 @Table(name = "ban")
 @Getter
 @ToString
-public class ParadiseBanEntity {
+public class BandaStationBanEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    @Column(name = "serverip")
-    private String serverAddress;
+    @Column(name = "bantime")
+    private LocalDateTime banDateTime;
 
     @NotNull
-    @Column(name = "server_id")
-    private String serverId;
+    @Column(name = "server_ip", columnDefinition = "INT UNSIGNED")
+    private Long serverIp;
+
+    @NotNull
+    @Column(name = "server_port", columnDefinition = "SMALLINT UNSIGNED")
+    private Integer serverPort;
 
     @Nullable
-    @Column(name = "ban_round_id")
+    @Column(name = "round_id")
     private Integer roundId;
 
+    @Nullable
+    @Column(name = "role")
+    private String role;
+
+    @Nullable
+    @Column(name = "expiration_time")
+    private LocalDateTime expirationDateTime;
+
     @NotNull
+    @Column(name = "applies_to_admins")
+    private Boolean appliesToAdmins;
+
+    @ToString.Exclude
+    @NotNull
+    @Column(name = "reason")
+    private String reason;
+
+    @Nullable
     @Column(name = "ckey")
     private String ckey;
 
@@ -47,25 +68,9 @@ public class ParadiseBanEntity {
     @Column(name = "a_ckey")
     private String adminCkey;
 
-    @NotNull
-    @Column(name = "reason")
-    private String reason;
-
     @Nullable
-    @Column(name = "job")
-    private String role;
-
-    @NotNull
-    @Column(name = "bantime")
-    private LocalDateTime banDateTime;
-
-    @NotNull
-    @Column(name = "duration")
-    private Integer duration;
-
-    @NotNull
-    @Column(name = "expiration_time")
-    private LocalDateTime expirationDateTime;
+    @Column(name = "edits")
+    private String edits;
 
     @Nullable
     @Column(name = "unbanned_ckey")
@@ -77,8 +82,8 @@ public class ParadiseBanEntity {
 
     @NotNull
     @Formula("case"
-             + " when bantype like '%admin%' then 'ADMIN'"
-             + " when job is not null and job != '' then 'ROLE'"
+             + " when applies_to_admins = 1 then 'ADMIN'"
+             + " when role is not null and role != '' and role != 'server' then 'ROLE'"
              + " else 'NORMAL'"
              + " end")
     @Enumerated(EnumType.STRING)

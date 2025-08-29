@@ -1,11 +1,11 @@
 package club.ss220.core.util;
 
-import org.springframework.stereotype.Service;
+public final class ByondUtils {
 
-@Service
-public class ByondUtils {
+    private ByondUtils() {
+    }
 
-    public String sanitizeCkey(String ckey) {
+    public static String sanitizeCkey(String ckey) {
         if (ckey == null) {
             return null;
         }

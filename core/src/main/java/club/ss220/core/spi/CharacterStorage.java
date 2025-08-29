@@ -6,7 +6,5 @@ import java.util.List;
 
 public interface CharacterStorage {
 
-    List<GameCharacterData> findByCkey(String ckey);
-
-    List<GameCharacterData> findByName(String name);
+    List<GameCharacterData> findByQuery(CharacterQuery query);
 }

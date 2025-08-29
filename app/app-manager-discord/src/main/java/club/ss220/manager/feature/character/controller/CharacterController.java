@@ -3,6 +3,7 @@ package club.ss220.manager.feature.character.controller;
 import club.ss220.core.application.SearchCharactersUseCase;
 import club.ss220.core.shared.GameBuild;
 import club.ss220.core.shared.GameCharacterData;
+import club.ss220.core.spi.CharacterQuery;
 import club.ss220.manager.feature.character.view.CharacterView;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,9 @@ public class CharacterController {
     private final SearchCharactersUseCase searchCharacters;
 
     public void searchCharacters(InteractionHook hook, GameBuild build, String name) {
+        CharacterQuery query = CharacterQuery.builder().build(build).name(name).build();
         try {
-            List<GameCharacterData> characters = searchCharacters.getCharactersByName(build, name);
+            List<GameCharacterData> characters = searchCharacters.getCharactersByQuery(query);
             if (characters.isEmpty()) {
                 view.renderNoCharactersFound(hook, name);
                 log.debug("Found 0 characters for query '{}' , build {}", name, build.getName());
@@ -34,12 +36,12 @@ public class CharacterController {
             }
             paginationController.show(hook, characters, PAGE_SIZE, view);
 
-            log.debug("Displayed {} characters for query '{}', build {}", characters.size(), name, build.getName());
+            log.debug("Displayed {} characters for query {}", characters.size(), query);
         } catch (UnsupportedOperationException _) {
             log.warn("Character search not supported for build {}", build.getName());
             view.renderUnsupportedBuild(hook, build);
         } catch (Exception e) {
-            throw new RuntimeException("Error displaying characters for query '" + name + "'", e);
+            throw new RuntimeException("Error displaying characters for query " + query, e);
         }
     }
 }
