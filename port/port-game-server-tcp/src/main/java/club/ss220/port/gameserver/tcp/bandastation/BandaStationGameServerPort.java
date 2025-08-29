@@ -1,14 +1,14 @@
 package club.ss220.port.gameserver.tcp.bandastation;
 
+import club.ss220.core.config.GameConfig;
+import club.ss220.core.shared.GameServerData;
+import club.ss220.core.shared.GameServerStatusData;
+import club.ss220.core.shared.OnlineAdminStatusData;
 import club.ss220.port.gameserver.tcp.bandastation.mapper.BandaStationOnlineAdminStatusMapper;
 import club.ss220.port.gameserver.tcp.bandastation.mapper.BandaStationServerStatusMapper;
 import club.ss220.port.gameserver.tcp.bandastation.presentation.BandaStationGameServerStatusPresentation;
 import club.ss220.port.gameserver.tcp.bandastation.presentation.BandaStationOnlineAdminStatusPresentation;
-import club.ss220.core.config.GameConfig;
 import club.ss220.port.gameserver.tcp.support.AbstractTcpGameServerPort;
-import club.ss220.core.shared.GameServerData;
-import club.ss220.core.shared.GameServerStatusData;
-import club.ss220.core.shared.OnlineAdminStatusData;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class BandaStationGameServerPort extends AbstractTcpGameServerPort {
     public GameServerStatusData getServerStatus(GameServerData gameServer) {
         TypeReference<BandaStationGameServerStatusPresentation> typeRef = new TypeReference<>() { };
         var presentation = callServer(gameServer, SERVER_STATUS_COMMAND, typeRef);
-        return statusMapper.mapToGameServerStatusData(presentation);
+        return statusMapper.toGameServerStatusData(presentation);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class BandaStationGameServerPort extends AbstractTcpGameServerPort {
         TypeReference<List<BandaStationOnlineAdminStatusPresentation>> typeRef = new TypeReference<>() { };
         var presentation = callServer(gameServer, ADMIN_LIST_COMMAND, typeRef);
         return presentation.stream()
-                .map(onlineAdminStatusMapper::mapToOnlineAdminStatusData)
+                .map(onlineAdminStatusMapper::toOnlineAdminStatusData)
                 .toList();
     }
 }

@@ -1,18 +1,16 @@
 package club.ss220.port.gameserver.tcp.paradise.mapper;
 
-import club.ss220.port.gameserver.tcp.paradise.presentation.ParadiseGameServerStatusPresentation;
 import club.ss220.core.shared.GameServerStatusData;
-import org.springframework.stereotype.Component;
+import club.ss220.port.gameserver.tcp.paradise.presentation.ParadiseGameServerStatusPresentation;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ParadiseServerStatusMapper {
+@Mapper(componentModel = "spring")
+public interface ParadiseServerStatusMapper {
 
-    public GameServerStatusData mapToGameServerStatusData(ParadiseGameServerStatusPresentation presentation) {
-        return GameServerStatusData.builder()
-                .players(presentation.players())
-                .admins(presentation.admins())
-                .roundDuration(presentation.roundDuration())
-                .rawData(presentation.rawData())
-                .build();
-    }
+    @Mapping(target = "players", expression = "java(presentation.players())")
+    @Mapping(target = "admins", expression = "java(presentation.admins())")
+    @Mapping(target = "rawData", expression = "java(presentation.rawData())")
+    @Mapping(target = "roundDuration", expression = "java(presentation.roundDuration())")
+    GameServerStatusData toGameServerStatusData(ParadiseGameServerStatusPresentation presentation);
 }

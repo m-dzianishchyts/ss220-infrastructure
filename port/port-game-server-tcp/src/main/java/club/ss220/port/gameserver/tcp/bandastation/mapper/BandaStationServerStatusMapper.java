@@ -1,18 +1,16 @@
 package club.ss220.port.gameserver.tcp.bandastation.mapper;
 
-import club.ss220.port.gameserver.tcp.bandastation.presentation.BandaStationGameServerStatusPresentation;
 import club.ss220.core.shared.GameServerStatusData;
-import org.springframework.stereotype.Component;
+import club.ss220.port.gameserver.tcp.bandastation.presentation.BandaStationGameServerStatusPresentation;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class BandaStationServerStatusMapper {
+@Mapper(componentModel = "spring")
+public interface BandaStationServerStatusMapper {
 
-    public GameServerStatusData mapToGameServerStatusData(BandaStationGameServerStatusPresentation presentation) {
-        return GameServerStatusData.builder()
-                .players(presentation.players())
-                .admins(presentation.admins())
-                .roundDuration(presentation.roundDuration())
-                .rawData(presentation.rawData())
-                .build();
-    }
+    @Mapping(target = "players", expression = "java(presentation.players())")
+    @Mapping(target = "admins", expression = "java(presentation.admins())")
+    @Mapping(target = "roundDuration", expression = "java(presentation.roundDuration())")
+    @Mapping(target = "rawData", expression = "java(presentation.rawData())")
+    GameServerStatusData toGameServerStatusData(BandaStationGameServerStatusPresentation presentation);
 }
