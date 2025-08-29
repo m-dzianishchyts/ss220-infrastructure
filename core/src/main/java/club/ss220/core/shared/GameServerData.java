@@ -52,7 +52,6 @@ public class GameServerData {
         this.build = build;
         this.active = active;
         this.host = host;
-//        this.ip = ip != null ? Inet4Address.ofLiteral(ip) : null;
         this.ip = ip;
         this.port = port;
         this.key = key;
