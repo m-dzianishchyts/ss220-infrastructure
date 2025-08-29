@@ -36,6 +36,7 @@ public class BandaStationGameServerStatusPresentation extends GameServerResponse
         return Optional.ofNullable(data.get(property))
                 .map(String::valueOf)
                 .map(Integer::parseInt)
+                .map(v -> Math.max(v, 0))
                 .map(Duration::ofSeconds)
                 .orElseThrow(() -> propertyNotFound(property));
     }
