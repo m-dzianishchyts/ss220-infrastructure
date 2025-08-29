@@ -1,6 +1,7 @@
 package club.ss220.manager.feature.server.view;
 
 import club.ss220.core.shared.GameServerData;
+import club.ss220.manager.presentation.Formatters;
 import club.ss220.manager.presentation.Senders;
 import club.ss220.manager.presentation.UiConstants;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class WhoView {
 
     private final Senders senders;
+    private final Formatters formatters;
 
     public void renderPlayersOnline(InteractionHook hook, GameServerData gameServer, List<String> playersOnline) {
         MessageEmbed embed = createPlayersOnlineForServerEmbed(gameServer, playersOnline);
@@ -25,6 +27,7 @@ public class WhoView {
 
     private MessageEmbed createPlayersOnlineForServerEmbed(GameServerData gameServer, List<String> playersOnline) {
         String description = playersOnline.stream()
+                .map(formatters::escape)
                 .sorted(String::compareTo)
                 .collect(Collectors.joining(", "));
 

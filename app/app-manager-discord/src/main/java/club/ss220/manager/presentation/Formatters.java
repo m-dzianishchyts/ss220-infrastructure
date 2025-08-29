@@ -10,12 +10,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 @Component
 @AllArgsConstructor
 public class Formatters {
 
     public static final Locale LOCALE = Locale.of("ru");
+    private static final Pattern DISCORD_MD_ESCAPE = Pattern.compile("([\\\\*_`~|>#\\[\\]@])");
 
     private final FormatConfig formatConfig;
 
@@ -48,5 +50,12 @@ public class Formatters {
     public String formatPlural(String pattern, Object... args) {
         MessageFormat messageFormat = new MessageFormat(pattern, LOCALE);
         return messageFormat.format(args);
+    }
+
+    public String escape(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+        return DISCORD_MD_ESCAPE.matcher(text).replaceAll("\\\\$1");
     }
 }

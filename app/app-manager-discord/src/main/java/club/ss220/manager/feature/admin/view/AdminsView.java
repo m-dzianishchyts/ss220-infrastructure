@@ -2,6 +2,7 @@ package club.ss220.manager.feature.admin.view;
 
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.OnlineAdminStatusData;
+import club.ss220.manager.presentation.Formatters;
 import club.ss220.manager.presentation.GameBuildStyle;
 import club.ss220.manager.presentation.Senders;
 import club.ss220.manager.presentation.UiConstants;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class AdminsView {
 
     private final Senders senders;
+    private final Formatters formatters;
 
     public void renderOnlineAdmins(InteractionHook hook,
                                    Map<GameServerData, List<OnlineAdminStatusData>> onlineAdmins) {
@@ -75,7 +77,8 @@ public class AdminsView {
         }
         admins.forEach(a -> {
             String ranks = String.join(", ", a.ranks());
-            builder.append(UiConstants.SPACE_FILLER).append(a.key()).append(" - ").append(ranks).append("\n");
+            String key = formatters.escape(a.key());
+            builder.append(UiConstants.SPACE_FILLER).append(key).append(" - ").append(ranks).append("\n");
         });
         return builder.toString().trim();
     }
