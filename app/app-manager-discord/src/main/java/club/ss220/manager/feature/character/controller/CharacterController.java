@@ -31,10 +31,9 @@ public class CharacterController {
             List<GameCharacterData> characters = searchCharacters.getCharactersByQuery(query);
             if (characters.isEmpty()) {
                 view.renderNoCharactersFound(hook, name);
-                log.debug("Found 0 characters for query '{}' , build {}", name, build.getName());
-                return;
+            } else {
+                paginationController.show(hook, characters, PAGE_SIZE, view);
             }
-            paginationController.show(hook, characters, PAGE_SIZE, view);
 
             log.debug("Displayed {} characters for query {}", characters.size(), query);
         } catch (UnsupportedOperationException _) {
