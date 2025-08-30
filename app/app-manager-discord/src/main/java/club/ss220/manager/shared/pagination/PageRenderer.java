@@ -16,4 +16,12 @@ public interface PageRenderer<T> {
     default void enrichComponents(PaginatedContext<T> ctx, List<ActionRow> rows) {
         // override to inject additional components
     }
+
+    default boolean enableItemSelector() { return false; }
+
+    default String itemOptionLabel(T item) { return String.valueOf(item); }
+
+    default MessageEmbed renderDetails(T item) {
+        throw new UnsupportedOperationException("renderDetails is not implemented");
+    }
 }

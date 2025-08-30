@@ -34,23 +34,4 @@ public class Embeds {
         embed.setColor(UiConstants.COLOR_ERROR);
         return embed.build();
     }
-
-//    public MessageEmbed banDetails(BanData ban) {
-//        String banDateTimeFormatted = formatters.formatDateTime(ban.banTime());
-//        String unbanDateTimeFormatted = Optional.ofNullable(ban.unbanTime())
-//                .map(formatters::formatDateTime).orElse("Бессрочно");
-//
-//        EmbedBuilder embed = new EmbedBuilder();
-//        embed.setTitle("%s **Детали блокировки #%d**".formatted(Emojis.PROHIBITED.getFormatted(), ban.id()));
-//        embed.setDescription(ban.reason());
-//        embed.addField("Тип блокировки", ban.banType(), true);
-//        embed.addField("Нарушитель", ban.ckey(), true);
-//        embed.addField("Админ", ban.adminCkey(), true);
-//        embed.addField("Статус", ban.isActive() ? "Активна" : "Снята", true);
-//        embed.addField("Время блокировки", banDateTimeFormatted, true);
-//        embed.addField("Время снятия блокировки", unbanDateTimeFormatted, true);
-//
-//        embed.setColor(UiConstants.COLOR_INFO);
-//        return embed.build();
-//    }
 }

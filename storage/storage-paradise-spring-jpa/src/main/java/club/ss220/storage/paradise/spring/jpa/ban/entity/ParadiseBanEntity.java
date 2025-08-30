@@ -47,6 +47,7 @@ public class ParadiseBanEntity {
     @Column(name = "a_ckey")
     private String adminCkey;
 
+    @ToString.Exclude
     @NotNull
     @Column(name = "reason")
     private String reason;
@@ -66,6 +67,10 @@ public class ParadiseBanEntity {
     @NotNull
     @Column(name = "expiration_time")
     private LocalDateTime expirationDateTime;
+
+    @Nullable
+    @Column(name = "edits")
+    private String editHistory;
 
     @Nullable
     @Column(name = "unbanned_ckey")

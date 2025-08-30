@@ -1,6 +1,5 @@
 package club.ss220.core.shared;
 
-import club.ss220.core.util.StringUtils;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,13 +38,13 @@ public record BanData(
         @Nullable
         Duration duration,
         @Nullable
+        String editHistory,
+        @Nullable
         String unbanAdminCkey,
         @Nullable
         @PastOrPresent
         LocalDateTime unbanDateTime
 ) {
-
-    public static final int SHORT_REASON_LENGTH = 45;
 
     @Nullable
     public LocalDateTime expirationDateTime() {
@@ -70,11 +69,6 @@ public record BanData(
 
     public boolean isPermanent() {
         return duration == null || duration.isNegative();
-    }
-
-    public String getShortReason() {
-        String firstLine = reason.split("\n")[0];
-        return StringUtils.truncate(firstLine, SHORT_REASON_LENGTH, "...");
     }
 
     public enum BanType {

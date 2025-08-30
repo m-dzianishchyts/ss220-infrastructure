@@ -1,5 +1,6 @@
 package club.ss220.manager.shared.pagination;
 
+import io.github.freya022.botcommands.api.components.event.ButtonEvent;
 import io.github.freya022.botcommands.api.components.event.StringSelectEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,26 @@ public class GenericPaginationController {
             view.update(event.getHook(), newCtx, renderer);
         } catch (Exception e) {
             throw new RuntimeException("Failed to switch page", e);
+        }
+    }
+
+    public <T> void onItemSelected(StringSelectEvent event, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        try {
+            event.deferEdit().queue();
+            int index = Integer.parseInt(event.getValues().getFirst());
+            T item = ctx.pageItems().get(index);
+            view.updateToDetails(event.getHook(), item, ctx, renderer);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to show item details", e);
+        }
+    }
+
+    public <T> void onBack(ButtonEvent event, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        try {
+            event.deferEdit().queue();
+            view.update(event.getHook(), ctx, renderer);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to return to list", e);
         }
     }
 

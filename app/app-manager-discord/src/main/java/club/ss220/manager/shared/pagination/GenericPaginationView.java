@@ -1,11 +1,14 @@
 package club.ss220.manager.shared.pagination;
 
+import dev.freya02.jda.emojis.unicode.Emojis;
+import io.github.freya022.botcommands.api.components.Buttons;
 import io.github.freya022.botcommands.api.components.SelectMenus;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -21,6 +24,7 @@ import java.util.List;
 public class GenericPaginationView {
 
     private final SelectMenus selectMenus;
+    private final Buttons buttons;
 
     public <T> void renderFirst(InteractionHook hook, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
         User viewer = hook.getInteraction().getUser();
@@ -34,11 +38,16 @@ public class GenericPaginationView {
         hook.editOriginal(data).queue();
     }
 
-    private <T> MessageCreateData buildMessage(User viewer, PaginatedContext<T> ctx,
-                                               PageRenderer<T> renderer) {
+    private <T> MessageCreateData buildMessage(User viewer, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
         MessageEmbed embed = renderer.render(ctx);
         ActionRow pagesSelect = buildPagesSelect(viewer, ctx, renderer);
-        List<ActionRow> rows = new ArrayList<>(List.of(pagesSelect));
+        List<ActionRow> rows = new ArrayList<>();
+        if (!ctx.pageItems().isEmpty()) {
+            rows.add(pagesSelect);
+            if (renderer.enableItemSelector()) {
+                rows.add(buildItemsSelect(viewer, ctx, renderer));
+            }
+        }
         renderer.enrichComponents(ctx, rows);
         return new MessageCreateBuilder().setEmbeds(embed).setComponents(rows).build();
     }
@@ -55,7 +64,29 @@ public class GenericPaginationView {
         return ActionRow.of(menu);
     }
 
-    private <T> List<SelectOption> buildPageOptions(PaginatedContext<T> ctx) {
+    private <T> ActionRow buildItemsSelect(User viewer, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        List<SelectOption> options = buildItemOptions(ctx, renderer);
+        StringSelectMenu menu = selectMenus.stringSelectMenu()
+                .ephemeral()
+                .constraints(c -> c.addUsers(viewer))
+                .bindTo(event -> ctx.controller().onItemSelected(event, ctx, renderer))
+                .addOptions(options)
+                .setPlaceholder("Подробнее")
+                .build();
+        return ActionRow.of(menu);
+    }
+
+    public <T> void updateToDetails(InteractionHook hook, T item, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        MessageEmbed embed = renderer.renderDetails(item);
+        var back = buttons.of(ButtonStyle.SECONDARY, "Назад", Emojis.ARROW_BACKWARD)
+                .ephemeral()
+                .bindTo(event -> ctx.controller().onBack(event, ctx, renderer))
+                .build();
+        MessageEditData data = MessageEditData.fromEmbeds(embed);
+        hook.editOriginal(data).setComponents(ActionRow.of(back)).queue();
+    }
+
+    private static <T> List<SelectOption> buildPageOptions(PaginatedContext<T> ctx) {
         int startPage = Math.max(0, ctx.startPage());
         int endPage = Math.clamp(ctx.totalPages() - 1, 0, ctx.endPage());
         List<SelectOption> list = new ArrayList<>(Math.max(0, endPage - startPage + 1));
@@ -65,5 +96,14 @@ public class GenericPaginationView {
             list.add(SelectOption.of("#" + itemStart + " - #" + itemEnd, String.valueOf(i)));
         }
         return list;
+    }
+
+    private static <T> List<SelectOption> buildItemOptions(PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        List<SelectOption> options = new ArrayList<>(ctx.pageItems().size());
+        for (int i = 0; i < ctx.pageItems().size(); i++) {
+            T item = ctx.pageItems().get(i);
+            options.add(SelectOption.of(renderer.itemOptionLabel(item), String.valueOf(i)));
+        }
+        return options;
     }
 }

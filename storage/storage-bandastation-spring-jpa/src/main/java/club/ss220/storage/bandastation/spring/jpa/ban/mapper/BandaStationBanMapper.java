@@ -25,6 +25,7 @@ public abstract class BandaStationBanMapper {
     @Mapping(target = "server", expression = "java(mapServer(banEntity))")
     @Mapping(target = "role", source = "role", qualifiedByName = "mapRole")
     @Mapping(target = "duration", expression = "java(getDuration(banEntity))")
+    @Mapping(target = "editHistory", source = "editHistory", qualifiedByName = "mapEditHistory")
     public abstract BanData toBanData(BandaStationBanEntity banEntity);
 
     @SneakyThrows
@@ -47,6 +48,15 @@ public abstract class BandaStationBanMapper {
         return Optional.ofNullable(banEntity.getExpirationDateTime())
                 .map(dt -> Duration.between(banEntity.getBanDateTime(), dt))
                 .filter(Duration::isPositive)
+                .orElse(null);
+    }
+
+    @Named("mapEditHistory")
+    String mapEditHistory(String editHistory) {
+        return Optional.ofNullable(editHistory)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(s -> s.replaceAll("<(hr|HR)>", "\n").trim())
                 .orElse(null);
     }
 }

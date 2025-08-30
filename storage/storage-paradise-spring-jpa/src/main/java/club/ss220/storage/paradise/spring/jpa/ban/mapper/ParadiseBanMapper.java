@@ -5,6 +5,7 @@ import club.ss220.core.shared.BanData;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.storage.paradise.spring.jpa.ban.entity.ParadiseBanEntity;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Duration;
 import java.util.Optional;
 
+@Slf4j
 @Mapper(componentModel = "spring")
 public abstract class ParadiseBanMapper {
 
@@ -22,6 +24,7 @@ public abstract class ParadiseBanMapper {
     @Mapping(target = "server", expression = "java(mapServer(banEntity))")
     @Mapping(target = "role", source = "role", qualifiedByName = "mapRole")
     @Mapping(target = "duration", source = "duration", qualifiedByName = "mapDuration")
+    @Mapping(target = "editHistory", source = "editHistory", qualifiedByName = "mapEditHistory")
     public abstract BanData toBanData(ParadiseBanEntity banEntity);
 
     @Named("mapServer")
@@ -33,12 +36,15 @@ public abstract class ParadiseBanMapper {
         if (optionalServer.isEmpty()) {
             optionalServer = gameConfig.getServerById(banEntity.getServerId());
         }
-        return optionalServer.orElseThrow(() -> serverResolutionError(banEntity));
+        return optionalServer.orElseGet(() -> {
+            log.warn("Couldn't resolve server for ban {}", banEntity);
+            return null;
+        });
     }
 
     @Named("mapRole")
     String mapRole(String role) {
-        return Optional.ofNullable(role).map(String::trim).orElse(null);
+        return Optional.ofNullable(role).map(String::trim).filter(s -> !s.isBlank()).orElse(null);
     }
 
     @Named("mapDuration")
@@ -46,7 +52,12 @@ public abstract class ParadiseBanMapper {
         return Optional.of(minutes).filter(m -> m >= 0).map(Duration::ofMinutes).orElse(null);
     }
 
-    private RuntimeException serverResolutionError(ParadiseBanEntity banEntity) {
-        return new IllegalArgumentException("Couldn't resolve server for ban: " + banEntity);
+    @Named("mapEditHistory")
+    String mapEditHistory(String editHistory) {
+        return Optional.ofNullable(editHistory)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(s -> s.replaceAll("<(br|BR)>", "\n").trim())
+                .orElse(null);
     }
 }

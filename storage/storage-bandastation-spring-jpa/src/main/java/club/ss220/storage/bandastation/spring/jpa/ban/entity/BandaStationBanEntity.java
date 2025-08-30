@@ -70,7 +70,7 @@ public class BandaStationBanEntity {
 
     @Nullable
     @Column(name = "edits")
-    private String edits;
+    private String editHistory;
 
     @Nullable
     @Column(name = "unbanned_ckey")
