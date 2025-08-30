@@ -48,8 +48,7 @@ public class UseCaseConfig {
     }
 
     @Bean
-    public GetMemberDataUseCase resolveMemberUseCase(UserStorage userStorage,
-                                                     List<PlayerStorage> playerRepositories) {
+    public GetMemberDataUseCase resolveMemberUseCase(UserStorage userStorage, List<PlayerStorage> playerRepositories) {
         return new GetMemberDataUseCase(userStorage, playerRepositories);
     }
 

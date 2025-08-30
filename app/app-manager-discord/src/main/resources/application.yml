@@ -35,10 +35,11 @@ botcommands:
       enable: true
 
 application:
-  token: example_bot_token
-  profile:
-    name: SS220 Manager
-    avatar: classpath:images/profile.png
+  discord:
+    token: example_bot_token
+    profile:
+      name: SS220 Manager
+      avatar: classpath:images/profile.png
   api:
     central:
       endpoint: http://localhost:8080

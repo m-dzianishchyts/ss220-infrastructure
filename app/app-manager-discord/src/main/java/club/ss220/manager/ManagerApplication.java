@@ -1,9 +1,10 @@
 package club.ss220.manager;
 
-import dev.freya02.jda.emojis.unicode.Emojis;
+import club.ss220.manager.config.ManagerApplicationConfig;
 import io.github.freya022.botcommands.api.core.JDAService;
 import io.github.freya022.botcommands.api.core.config.JDAConfiguration;
 import io.github.freya022.botcommands.api.core.events.BReadyEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
@@ -11,11 +12,9 @@ import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.IEventManager;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ResourceLoader;
@@ -25,31 +24,19 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
 @Service
 @EnableScheduling
+@RequiredArgsConstructor
 @SpringBootApplication(scanBasePackages = "club.ss220")
 public class ManagerApplication extends JDAService {
 
-    private final ResourceLoader resourceLoader;
     private final JDAConfiguration jdaConfig;
-    private final String token;
-    private final String profileName;
-    private final Icon profileAvatar;
-
-    public ManagerApplication(ResourceLoader resourceLoader, JDAConfiguration jdaConfig,
-                              @Value("${application.token}") String token,
-                              @Value("${application.profile.name}") String profileName,
-                              @Value("${application.profile.avatar}") String profileAvatarUri) {
-        this.resourceLoader = resourceLoader;
-        this.jdaConfig = jdaConfig;
-        this.token = token;
-        this.profileName = profileName;
-        this.profileAvatar = loadIcon(profileAvatarUri);
-    }
+    private final ManagerApplicationConfig appConfig;
+    private final ResourceLoader resourceLoader;
 
     @NotNull
     @Override
@@ -65,18 +52,10 @@ public class ManagerApplication extends JDAService {
 
     @Override
     protected void createJDA(@NotNull BReadyEvent bReadyEvent, @NotNull IEventManager iEventManager) {
-        createDefault(token)
-                .setActivity(Activity.customStatus("Work in progress " + Emojis.CONSTRUCTION.getFormatted()))
+        createDefault(appConfig.getToken())
+                .setActivity(Optional.ofNullable(appConfig.getStatus()).map(Activity::customStatus).orElse(null))
                 .addEventListeners(new OnReadyListener())
                 .build();
-    }
-
-    private Icon loadIcon(String path) {
-        try (InputStream inputStream = resourceLoader.getResource(path).getInputStream()) {
-            return Icon.from(inputStream);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
     }
 
     public static void main(String[] args) {
@@ -89,20 +68,32 @@ public class ManagerApplication extends JDAService {
         public void onReady(@NotNull ReadyEvent event) {
             JDA jda = event.getJDA();
 
-            jda.getSelfUser().getManager().setName(profileName).setAvatar(profileAvatar).queue(
-                    _ -> log.info("Bot profile updated."),
-                    e -> log.error("Error updating bot profile", e)
-            );
-            jda.getGuilds().forEach(guild -> guild.modifyNickname(guild.getSelfMember(), profileName).queue());
+            if (appConfig.getProfile().autoUpdate()) {
+                String profileName = appConfig.getProfile().name();
+                Icon profileAvatar = loadIcon(appConfig.getProfile().avatar());
+                jda.getSelfUser().getManager().setName(profileName).setAvatar(profileAvatar).queue(
+                        _ -> log.info("Bot profile updated"),
+                        e -> log.error("Error updating bot profile", e)
+                );
+                jda.getGuilds().forEach(guild -> guild.modifyNickname(guild.getSelfMember(), profileName).queue(
+                        _ -> log.info("Bot nickname updated for guild {}", guild.getIdLong()),
+                        e -> log.error("Error updating bot nickname for guild {}", guild.getIdLong(), e)
+                ));
+            }
 
-            List<Command> globalCommands = jda.retrieveCommands().complete();
-            List<Command> guildCommands = jda
-                    .getGuilds()
-                    .stream()
-                    .flatMap(guild -> guild.retrieveCommands().complete().stream())
-                    .toList();
-            log.info("Bot started with {} global commands and {} guild commands registered.",
-                     globalCommands.size(), guildCommands.size());
+            long globalCommands = jda.retrieveCommands().complete().size();
+            long guildCommands = jda.getGuilds().stream()
+                    .mapToLong(guild -> guild.retrieveCommands().complete().size())
+                    .max().orElse(0);
+            log.info("Bot started with {} global commands and {} guild commands", globalCommands, guildCommands);
+        }
+
+        private Icon loadIcon(String path) {
+            try (InputStream inputStream = resourceLoader.getResource(path).getInputStream()) {
+                return Icon.from(inputStream);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
     }
 }
