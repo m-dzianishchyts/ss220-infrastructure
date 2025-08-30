@@ -69,9 +69,13 @@ public class BansController {
                     .build();
 
             List<BanData> bans = getBansUseCase.execute(query);
-            paginationController.show(hook, bans, PAGE_SIZE, view);
+            if (bans.isEmpty()) {
+                view.renderNoBansFound(hook);
+            } else {
+                paginationController.show(hook, bans, PAGE_SIZE, view);
+            }
 
-            log.debug("Displayed {} bans for query: {}", bans.size(), query);
+            log.debug("Displayed {} bans for query {}", bans.size(), query);
         } catch (Exception e) {
             throw new RuntimeException("Error displaying bans", e);
         }

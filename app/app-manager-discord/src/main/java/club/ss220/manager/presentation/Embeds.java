@@ -9,12 +9,20 @@ import java.util.SequencedMap;
 @Component
 public class Embeds {
 
+    public MessageEmbed info(String title, String message) {
+        return new EmbedBuilder()
+                .setTitle(title)
+                .setDescription(message)
+                .setColor(UiConstants.COLOR_INFO)
+                .build();
+    }
+
     public MessageEmbed error(String message) {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setTitle("Ошибка");
-        embed.setDescription(message);
-        embed.setColor(UiConstants.COLOR_ERROR);
-        return embed.build();
+        return new EmbedBuilder()
+                .setTitle("Ошибка")
+                .setDescription(message)
+                .setColor(UiConstants.COLOR_ERROR)
+                .build();
     }
 
     public MessageEmbed uncaughtException(String message, SequencedMap<String, Object> context) {

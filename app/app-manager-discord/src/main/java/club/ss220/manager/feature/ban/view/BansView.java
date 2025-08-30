@@ -31,15 +31,15 @@ public class BansView implements PageRenderer<BanData> {
         senders.sendEmbedEphemeral(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
     }
 
+    public void renderNoBansFound(InteractionHook hook) {
+        senders.sendEmbedEphemeral(hook, embeds.info("Список блокировок", "Нет блокировок, удовлетворяющих условиям."));
+    }
+
     @Override
     public MessageEmbed render(PaginatedContext<BanData> ctx) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Список блокировок");
         embedBuilder.setColor(UiConstants.COLOR_INFO);
-        if (ctx.pageItems().isEmpty()) {
-            embedBuilder.setDescription("Нет блокировок, удовлетворяющих условиям.");
-            return embedBuilder.build();
-        }
 
         String description = ctx.pageItems().stream()
                 .map(this::banBlock)
