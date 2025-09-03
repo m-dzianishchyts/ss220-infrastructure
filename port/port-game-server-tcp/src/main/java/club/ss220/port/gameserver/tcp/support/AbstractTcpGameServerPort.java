@@ -36,7 +36,8 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
 
     protected <T> T executeCommand(GameServerData gameServer, String command, TypeReference<T> typeRef) {
         String fullCommand = buildCommand(gameServer, command);
-        log.debug("Executing topic '{}' on {}:{}", fullCommand, gameServer.ip(), gameServer.port());
+        String censoredCommand = censorSecrets(fullCommand);
+        log.debug("Executing topic '{}' on {}:{}", censoredCommand, gameServer.ip(), gameServer.port());
 
         try {
             byte[] responseBytes = sendReceiveData(gameServer, fullCommand);
@@ -44,13 +45,13 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
             return objectMapper.convertValue(raw, typeRef);
 
         } catch (JsonProcessingException e) {
-            String message = "Error decoding response for command '" + fullCommand + "'";
+            String message = "Error decoding response for command '" + censoredCommand + "'";
             throw new GameServerPortException(gameServer, message, e);
         } catch (IOException e) {
-            String message = "Error executing command '" + fullCommand + "'";
+            String message = "Error executing command '" + censoredCommand + "'";
             throw new GameServerPortException(gameServer, message, e);
         } catch (IllegalArgumentException e) {
-            String message = "Error converting response to " + typeRef + ", command '" + fullCommand + "'";
+            String message = "Error converting response to " + typeRef + ", command '" + censoredCommand + "'";
             throw new GameServerPortException(gameServer, message, e);
         }
     }
@@ -91,7 +92,8 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
         byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
         int messageLength = dataBytes.length + HOLDER_BYTES;
         if (messageLength > MAX_MESSAGE_LENGTH) {
-            throw new IllegalArgumentException("Message '" + data + "' exceeds maximum length:" + MAX_MESSAGE_LENGTH);
+            String message = "Message '" + censorSecrets(data) + "' exceeds maximum length:" + MAX_MESSAGE_LENGTH;
+            throw new IllegalArgumentException(message);
         }
 
         ByteBuffer buffer = ByteBuffer.allocate(dataBytes.length + HEADER_BYTES + HOLDER_BYTES);
@@ -123,5 +125,12 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
         }
 
         return Map.of(DATA_PROPERTY, new Object());
+    }
+
+    private String censorSecrets(String command) {
+        if (command == null || command.isEmpty()) {
+            return command;
+        }
+        return command.replaceAll("(?i)([?&]key=)([^&]+)", "$1****");
     }
 }
