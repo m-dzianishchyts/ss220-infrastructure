@@ -3,6 +3,7 @@ package club.ss220.manager.config;
 import club.ss220.core.application.GetAllServersStatusUseCase;
 import club.ss220.core.application.GetBansUseCase;
 import club.ss220.core.application.GetMemberDataUseCase;
+import club.ss220.core.application.GetNotesUseCase;
 import club.ss220.core.application.GetOnlinePlayersListUseCase;
 import club.ss220.core.application.GetOnlineStaffListUseCase;
 import club.ss220.core.application.GetServerStatusUseCase;
@@ -11,6 +12,7 @@ import club.ss220.core.shared.GameBuild;
 import club.ss220.core.spi.BanStorage;
 import club.ss220.core.spi.CharacterStorage;
 import club.ss220.core.spi.GameServerPort;
+import club.ss220.core.spi.NoteStorage;
 import club.ss220.core.spi.PlayerStorage;
 import club.ss220.core.spi.UserStorage;
 import org.springframework.context.annotation.Bean;
@@ -55,5 +57,10 @@ public class UseCaseConfig {
     @Bean
     public GetBansUseCase getPlayerBansUseCase(Map<GameBuild, BanStorage> banStorageMap) {
         return new GetBansUseCase(banStorageMap);
+    }
+
+    @Bean
+    public GetNotesUseCase getPlayerNotesUseCase(Map<GameBuild, NoteStorage> noteStorageMap) {
+        return new GetNotesUseCase(noteStorageMap);
     }
 }

@@ -1,11 +1,11 @@
-package club.ss220.manager.feature.ban.controller;
+package club.ss220.manager.feature.note.controller;
 
-import club.ss220.core.application.GetBansUseCase;
-import club.ss220.core.shared.BanData;
+import club.ss220.core.application.GetNotesUseCase;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.MemberData;
-import club.ss220.core.spi.BanQuery;
-import club.ss220.manager.feature.ban.view.BansView;
+import club.ss220.core.shared.NoteData;
+import club.ss220.core.spi.NoteQuery;
+import club.ss220.manager.feature.note.view.NotesView;
 import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.application.MemberDataProvider;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
@@ -21,22 +21,23 @@ import java.util.Optional;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class BansController {
+public class NotesController {
 
     private static final int PAGE_SIZE = 5;
 
-    private final BansView view;
+    private final NotesView view;
     private final GenericPaginationController paginationController;
     private final MemberDataProvider memberDataProvider;
-    private final GetBansUseCase getBansUseCase;
+    private final GetNotesUseCase getNotesUseCase;
 
-    public void showBans(InteractionHook hook,
-                         @Nullable MemberTarget playerTarget, @Nullable MemberTarget adminTarget,
-                         @Nullable GameServerData server, @Nullable Integer roundId,
-                         @Nullable Boolean permanent, @Nullable BanData.BanType banType,
-                         @Nullable Boolean expired, @Nullable Boolean unbanned) {
+    public void showNotes(InteractionHook hook,
+                          @Nullable MemberTarget playerTarget,
+                          @Nullable MemberTarget adminTarget,
+                          @Nullable GameServerData server,
+                          @Nullable Integer roundId,
+                          @Nullable Boolean active) {
         try {
-            BanQuery.BanQueryBuilder builder = BanQuery.builder();
+            NoteQuery.NoteQueryBuilder builder = NoteQuery.builder();
 
             if (playerTarget != null) {
                 Optional<MemberData> playerData = memberDataProvider.getByTarget(playerTarget);
@@ -56,25 +57,22 @@ public class BansController {
                 builder.adminCkey(adminData.get().userData().ckey());
             }
 
-            BanQuery query = builder
+            NoteQuery query = builder
                     .server(server)
                     .roundId(roundId)
-                    .permanent(permanent)
-                    .banType(banType)
-                    .expired(expired)
-                    .unbanned(unbanned)
+                    .active(active)
                     .build();
 
-            List<BanData> bans = getBansUseCase.execute(query);
-            if (bans.isEmpty()) {
-                view.renderNoBansFound(hook);
+            List<NoteData> notes = getNotesUseCase.execute(query);
+            if (notes.isEmpty()) {
+                view.renderNoNotesFound(hook);
             } else {
-                paginationController.show(hook, bans, PAGE_SIZE, view);
+                paginationController.show(hook, notes, PAGE_SIZE, view);
             }
 
-            log.debug("Displayed {} bans for query {}", bans.size(), query);
+            log.debug("Displayed {} notes for query {}", notes.size(), query);
         } catch (Exception e) {
-            throw new RuntimeException("Error displaying bans", e);
+            throw new RuntimeException("Error displaying notes", e);
         }
     }
 }

@@ -4,6 +4,7 @@ import club.ss220.core.shared.GameBuild;
 import club.ss220.core.spi.BanStorage;
 import club.ss220.core.spi.CharacterStorage;
 import club.ss220.core.spi.GameServerPort;
+import club.ss220.core.spi.NoteStorage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,16 @@ public class GameBuildStrategyConfig {
     public Map<GameBuild, BanStorage> banRepositoryMap(
             @Qualifier(GameConfig.BUILD_PARADISE) BanStorage paradiseRepository,
             @Qualifier(GameConfig.BUILD_BANDASTRATION) BanStorage bandastationRepository) {
+        return Map.of(
+                GameBuild.PARADISE, paradiseRepository,
+                GameBuild.BANDASTATION, bandastationRepository
+        );
+    }
+
+    @Bean
+    public Map<GameBuild, NoteStorage> noteRepositoryMap(
+            @Qualifier(GameConfig.BUILD_PARADISE) NoteStorage paradiseRepository,
+            @Qualifier(GameConfig.BUILD_BANDASTRATION) NoteStorage bandastationRepository) {
         return Map.of(
                 GameBuild.PARADISE, paradiseRepository,
                 GameBuild.BANDASTATION, bandastationRepository
