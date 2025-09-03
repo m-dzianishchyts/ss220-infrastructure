@@ -8,6 +8,7 @@ import io.github.freya022.botcommands.api.commands.application.slash.GuildSlashE
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.JDASlashCommand;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.SlashOption;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.TopLevelSlashCommandData;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 
 @Command
@@ -19,8 +20,11 @@ public class CharacterCommand extends ApplicationCommand {
     @JDASlashCommand(name = "character", description = "Узнать владельца персонажа.")
     @TopLevelSlashCommandData(defaultLocked = true)
     public void onSlashInteraction(GuildSlashEvent event,
-                                   @SlashOption(usePredefinedChoices = true) GameBuild build,
-                                   @SlashOption(description = "Имя персонажа или его часть.") String name) {
+                                   @Nullable
+                                   @SlashOption(description = "Игровой билд.", usePredefinedChoices = true)
+                                   GameBuild build,
+                                   @SlashOption(description = "Имя персонажа или его часть.")
+                                   String name) {
         boolean ephemeral = true;
         event.deferReply(ephemeral).queue();
         characterController.searchCharacters(event.getHook(), build, name);

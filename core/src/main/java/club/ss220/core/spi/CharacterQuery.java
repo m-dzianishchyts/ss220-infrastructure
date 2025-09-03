@@ -2,7 +2,6 @@ package club.ss220.core.spi;
 
 import club.ss220.core.shared.GameBuild;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Value;
 
@@ -12,7 +11,7 @@ public class CharacterQuery {
 
     public static final int MAX_PAGE_SIZE = 500;
 
-    @NotNull
+    @Nullable
     GameBuild build;
     @Nullable
     String name;

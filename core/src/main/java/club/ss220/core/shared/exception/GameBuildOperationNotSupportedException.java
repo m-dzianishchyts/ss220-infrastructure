@@ -1,7 +1,9 @@
 package club.ss220.core.shared.exception;
 
 import club.ss220.core.shared.GameBuild;
+import lombok.Getter;
 
+@Getter
 public class GameBuildOperationNotSupportedException extends RuntimeException {
 
     private final GameBuild gameBuild;
