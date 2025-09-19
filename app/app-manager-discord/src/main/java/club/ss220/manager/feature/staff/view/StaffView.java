@@ -29,7 +29,7 @@ public class StaffView {
     public void renderOnlineStaff(InteractionHook hook,
                                   Map<GameServerData, List<OnlineStaffStatusData>> onlineStaff) {
         MessageEmbed embed = createOnlineStaffEmbed(onlineStaff);
-        senders.sendEmbedEphemeral(hook, embed);
+        senders.sendEmbed(hook, embed);
     }
 
     private MessageEmbed createOnlineStaffEmbed(Map<GameServerData, List<OnlineStaffStatusData>> serversStaff) {

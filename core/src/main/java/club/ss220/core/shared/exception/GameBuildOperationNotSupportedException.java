@@ -4,7 +4,7 @@ import club.ss220.core.shared.GameBuild;
 import lombok.Getter;
 
 @Getter
-public class GameBuildOperationNotSupportedException extends RuntimeException {
+public class GameBuildOperationNotSupportedException extends DomainException {
 
     private final GameBuild gameBuild;
 

@@ -66,7 +66,7 @@ public class MemberInfoView {
     }
 
     public void renderMemberNotFound(InteractionHook hook, MemberTarget target) {
-        senders.sendEmbedEphemeral(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
+        senders.sendEmbed(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
     }
 
     private MessageCreateData buildMessageData(User viewer, MemberInfoContext context) {

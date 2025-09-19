@@ -6,7 +6,9 @@ import java.util.Optional;
 
 public interface UserStorage {
 
-    Optional<UserData> getUserByCkey(String ckey);
+    Optional<UserData> findUserByCkey(String ckey);
 
-    Optional<UserData> getUserByDiscordId(long discordId);
+    Optional<UserData> findUserByDiscordId(long discordId);
+
+    Optional<UserData> findUserById(int id);
 }

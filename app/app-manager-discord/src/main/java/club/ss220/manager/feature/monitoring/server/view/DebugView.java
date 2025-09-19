@@ -4,9 +4,9 @@ import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.GameServerStatusData;
 import club.ss220.manager.presentation.Senders;
 import club.ss220.manager.presentation.UiConstants;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -26,7 +26,7 @@ public class DebugView {
 
     public void renderServerStatus(InteractionHook hook, GameServerData server, GameServerStatusData serverStatus) {
         MessageEmbed embed = createServerStatusEmbed(server, serverStatus);
-        senders.sendEmbedEphemeral(hook, embed);
+        senders.sendEmbed(hook, embed);
     }
 
     private MessageEmbed createServerStatusEmbed(GameServerData server, GameServerStatusData serverStatus) {
@@ -37,11 +37,8 @@ public class DebugView {
                 .build();
     }
 
+    @SneakyThrows
     private String createServerStatusBlock(GameServerStatusData serverStatus) {
-        try {
-            return "```json\n" + objectMapper.writeValueAsString(serverStatus.rawData()) + "\n```";
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return "```json\n" + objectMapper.writeValueAsString(serverStatus.rawData()) + "\n```";
     }
 }

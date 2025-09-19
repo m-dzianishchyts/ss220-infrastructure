@@ -1,11 +1,17 @@
 package club.ss220.core.application;
 
+import club.ss220.core.shared.GameBuild;
+import club.ss220.core.shared.MemberData;
+import club.ss220.core.shared.PlayerData;
+import club.ss220.core.shared.UserData;
 import club.ss220.core.spi.PlayerStorage;
 import club.ss220.core.spi.UserStorage;
-import club.ss220.core.shared.*;
 import lombok.RequiredArgsConstructor;
 
-import java.util.*;
+import java.util.List;
+import java.util.NavigableMap;
+import java.util.Optional;
+import java.util.TreeMap;
 
 @RequiredArgsConstructor
 public class GetMemberDataUseCase {
@@ -14,11 +20,11 @@ public class GetMemberDataUseCase {
     private final List<PlayerStorage> playerStorages;
 
     public Optional<MemberData> execute(long discordId) {
-        return userStorage.getUserByDiscordId(discordId).map(this::enrichWithPlayerData);
+        return userStorage.findUserByDiscordId(discordId).map(this::enrichWithPlayerData);
     }
 
     public Optional<MemberData> execute(String ckey) {
-        return userStorage.getUserByCkey(ckey).map(this::enrichWithPlayerData);
+        return userStorage.findUserByCkey(ckey).map(this::enrichWithPlayerData);
     }
 
     private MemberData enrichWithPlayerData(UserData user) {

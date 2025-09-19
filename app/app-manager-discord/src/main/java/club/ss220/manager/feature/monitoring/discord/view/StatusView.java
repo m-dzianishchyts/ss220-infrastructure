@@ -23,7 +23,7 @@ public class StatusView {
 
     public void renderApplicationStatus(InteractionHook hook, ApplicationStatus applicationStatus) {
         MessageEmbed embed = createApplicationStatusEmbed(applicationStatus);
-        senders.sendEmbedEphemeral(hook, embed);
+        senders.sendEmbed(hook, embed);
     }
 
     private MessageEmbed createApplicationStatusEmbed(ApplicationStatus applicationStatus) {

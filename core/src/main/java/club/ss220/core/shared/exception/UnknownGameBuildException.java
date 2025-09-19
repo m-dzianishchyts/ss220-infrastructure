@@ -1,6 +1,9 @@
 package club.ss220.core.shared.exception;
 
-public class UnknownGameBuildException extends RuntimeException {
+import lombok.Getter;
+
+@Getter
+public class UnknownGameBuildException extends DomainException {
 
     private final String serverName;
 

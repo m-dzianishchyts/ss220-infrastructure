@@ -24,16 +24,16 @@ public class CharacterView implements PageRenderer<GameCharacterData> {
 
     public void renderNoCharactersFound(InteractionHook hook, String query) {
         MessageEmbed embed = embeds.error("Персонажи по запросу '" + query + "' не найдены.");
-        senders.sendEmbedEphemeral(hook, embed);
+        senders.sendEmbed(hook, embed);
     }
 
     public void renderUnsupportedBuild(InteractionHook hook, GameBuild build) {
         MessageEmbed embed = embeds.error(build.getName() + " пока не поддерживает поиск персонажей.");
-        senders.sendEmbedEphemeral(hook, embed);
+        senders.sendEmbed(hook, embed);
     }
 
     @Override
-    public MessageEmbed render(PaginatedContext<GameCharacterData> ctx) {
+    public MessageEmbed renderPage(PaginatedContext<GameCharacterData> ctx) {
         List<GameCharacterData> pageItems = ctx.pageItems();
 
         List<MessageEmbed.Field> fields = pageItems.stream()

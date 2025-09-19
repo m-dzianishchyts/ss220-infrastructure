@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PageRenderer<T> {
     
-    MessageEmbed render(PaginatedContext<T> ctx);
+    MessageEmbed renderPage(PaginatedContext<T> ctx);
 
     default String paginationFooter(PaginatedContext<T> ctx) {
         return "Всего: " + ctx.totalItems() + " — Страница " + (ctx.page() + 1) + "/" + ctx.totalPages();

@@ -32,15 +32,15 @@ public class NotesView implements PageRenderer<NoteData> {
     private final Formatters formatters;
 
     public void renderMemberNotFound(net.dv8tion.jda.api.interactions.InteractionHook hook, MemberTarget target) {
-        senders.sendEmbedEphemeral(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
+        senders.sendEmbed(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
     }
 
     public void renderNoNotesFound(net.dv8tion.jda.api.interactions.InteractionHook hook) {
-        senders.sendEmbedEphemeral(hook, embeds.info("Список заметок", "Нет заметок, удовлетворяющих условиям."));
+        senders.sendEmbed(hook, embeds.info("Список заметок", "Нет заметок, удовлетворяющих условиям."));
     }
 
     @Override
-    public MessageEmbed render(PaginatedContext<NoteData> ctx) {
+    public MessageEmbed renderPage(PaginatedContext<NoteData> ctx) {
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Список заметок");
         eb.setColor(UiConstants.COLOR_INFO);

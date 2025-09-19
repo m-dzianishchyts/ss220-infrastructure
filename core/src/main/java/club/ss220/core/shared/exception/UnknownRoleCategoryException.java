@@ -1,6 +1,9 @@
 package club.ss220.core.shared.exception;
 
-public class UnknownRoleCategoryException extends RuntimeException {
+import lombok.Getter;
+
+@Getter
+public class UnknownRoleCategoryException extends DomainException {
 
     private final String roleCategory;
 

@@ -27,7 +27,7 @@ public class OnlineView {
 
     public void renderPlayersOnline(InteractionHook hook, Map<GameServerData, GameServerStatusData> serversStatuses) {
         MessageEmbed embed = createPlayersOnlineEmbed(serversStatuses);
-        senders.sendEmbedEphemeral(hook, embed);
+        senders.sendEmbed(hook, embed);
     }
 
     private MessageEmbed createPlayersOnlineEmbed(Map<GameServerData, GameServerStatusData> serversStatuses) {

@@ -7,6 +7,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Set;
 
 @Service
@@ -23,7 +24,10 @@ public class ValidationService {
     public <T> T validate(T value) {
         Set<ConstraintViolation<T>> violations = validator.validate(value);
         if (!violations.isEmpty()) {
-            String message = "Object of type " + value.getClass() + " failed validation: ";
+            String details = Arrays.toString(violations.stream()
+                    .map(v -> v.getPropertyPath() + " " + v.getMessage())
+                    .toArray(String[]::new));
+            String message = "Object of type " + value.getClass().getName() + " failed validation: " + details;
             throw new ConstraintViolationException(message, violations);
         }
         return value;

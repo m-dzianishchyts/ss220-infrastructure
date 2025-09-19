@@ -29,7 +29,7 @@ public class GenericPaginationView {
     public <T> void renderFirst(InteractionHook hook, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
         User viewer = hook.getInteraction().getUser();
         MessageCreateData data = buildMessage(viewer, ctx, renderer);
-        hook.sendMessage(data).queue();
+        hook.setEphemeral(true).sendMessage(data).queue();
     }
 
     public <T> void update(InteractionHook hook, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
@@ -39,7 +39,7 @@ public class GenericPaginationView {
     }
 
     private <T> MessageCreateData buildMessage(User viewer, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
-        MessageEmbed embed = renderer.render(ctx);
+        MessageEmbed embed = renderer.renderPage(ctx);
         ActionRow pagesSelect = buildPagesSelect(viewer, ctx, renderer);
         List<ActionRow> rows = new ArrayList<>();
         if (!ctx.pageItems().isEmpty()) {

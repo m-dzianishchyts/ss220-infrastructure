@@ -40,6 +40,10 @@ application:
     profile:
       name: SS220 Manager
       avatar: classpath:images/profile.png
+    game:
+      server-types:
+        - name: prime
+        - name: devtest
   api:
     central:
       endpoint: http://localhost:8080

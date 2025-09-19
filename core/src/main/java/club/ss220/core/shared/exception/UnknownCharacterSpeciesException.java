@@ -1,6 +1,9 @@
 package club.ss220.core.shared.exception;
 
-public class UnknownCharacterSpeciesException extends RuntimeException {
+import lombok.Getter;
+
+@Getter
+public class UnknownCharacterSpeciesException extends DomainException {
 
     private final String species;
 
