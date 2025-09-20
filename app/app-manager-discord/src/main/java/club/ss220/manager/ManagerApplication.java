@@ -83,7 +83,9 @@ public class ManagerApplication extends JDAService {
                 ));
             }
 
-            long globalCommands = jda.retrieveCommands().complete().size();
+            long globalCommands = jda.retrieveCommands().complete().stream()
+                    .mapToLong(c -> commands.flattenCommandInfo(c).size())
+                    .sum();
             long guildCommands = jda.getGuilds().stream()
                     .map(guild -> guild.retrieveCommands().complete())
                     .mapToLong(cmds -> cmds.stream().mapToLong(c -> commands.flattenCommandInfo(c).size()).sum())
