@@ -67,4 +67,4 @@ logging:
     io.github.freya022.botcommands: DEBUG
   discord:
     dispatchChannelId: 0
-    dispatchInterval: 10
+    dispatchInterval: 360
