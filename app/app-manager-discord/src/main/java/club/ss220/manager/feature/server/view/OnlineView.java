@@ -2,14 +2,13 @@ package club.ss220.manager.feature.server.view;
 
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.GameServerStatusData;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.GameBuildStyle;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
-import lombok.AllArgsConstructor;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.GameBuildStyle;
+import club.ss220.manager.shared.presentation.UiConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,18 +18,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor
-public class OnlineView {
+public class OnlineView extends BasicView {
 
-    private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderPlayersOnline(InteractionHook hook, Map<GameServerData, GameServerStatusData> serversStatuses) {
-        MessageEmbed embed = createPlayersOnlineEmbed(serversStatuses);
-        senders.sendEmbed(hook, embed);
+    public OnlineView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    private MessageEmbed createPlayersOnlineEmbed(Map<GameServerData, GameServerStatusData> serversStatuses) {
+    public MessageEmbed renderPlayersOnline(Map<GameServerData, GameServerStatusData> serversStatuses) {
         List<MessageEmbed.Field> fields = groupByBuildStyle(serversStatuses).entrySet().stream()
                 .map(e -> buildOnlineField(e.getKey(), e.getValue()))
                 .toList();

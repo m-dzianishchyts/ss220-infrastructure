@@ -5,6 +5,7 @@ import club.ss220.core.shared.MemberData;
 import club.ss220.manager.feature.member.view.MemberInfoView;
 import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.application.MemberDataProvider;
+import club.ss220.manager.shared.presentation.Senders;
 import io.github.freya022.botcommands.api.components.event.StringSelectEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -23,59 +25,62 @@ public class MemberInfoController {
 
     private final MemberInfoView view;
     private final MemberDataProvider memberDataProvider;
+    private final Senders senders;
 
-    public void showMemberInfo(InteractionHook hook, User viewer) {
+    public void renderMemberInfo(IReplyCallback interaction, User viewer) {
         MemberTarget target = MemberTarget.fromUser(viewer);
         boolean isConfidential = false;
-        showMemberInfo(hook, viewer, target, isConfidential);
+        renderMemberInfo(interaction, viewer, target, isConfidential);
     }
 
-    public void showMemberInfo(InteractionHook hook, User viewer, User target) {
+    public void renderMemberInfo(IReplyCallback interaction, User viewer, User target) {
         MemberTarget memberTarget = MemberTarget.fromUser(target);
         boolean isConfidential = true;
-        showMemberInfo(hook, viewer, memberTarget, isConfidential);
+        renderMemberInfo(interaction, viewer, memberTarget, isConfidential);
     }
 
-    public void showMemberInfo(InteractionHook hook, User viewer, MemberTarget target) {
+    public void renderMemberInfo(IReplyCallback interaction, User viewer, MemberTarget target) {
         boolean isConfidential = true;
-        showMemberInfo(hook, viewer, target, isConfidential);
+        renderMemberInfo(interaction, viewer, target, isConfidential);
     }
 
-    public void showMemberInfo(InteractionHook hook, User viewer, MemberTarget target, boolean isConfidential) {
-        try {
-            Optional<MemberData> memberOptional = memberDataProvider.getByTarget(target);
-            if (memberOptional.isEmpty()) {
-                view.renderMemberNotFound(hook, target);
-                log.debug("Member not found for target {}", target);
-                return;
-            }
+    public void renderMemberInfo(IReplyCallback interaction, User viewer, MemberTarget target, boolean isConfidential) {
+        interaction.deferReply().setEphemeral(true).queue();
 
-            MemberData member = memberOptional.get();
-            GameBuild defaultBuild = member.gameInfo().firstKey();
-            MemberInfoContext context = isConfidential
-                                        ? MemberInfoContext.confidentialInfo(member, defaultBuild)
-                                        : MemberInfoContext.publicInfo(member, defaultBuild);
-
-            view.renderMemberInfo(hook, viewer, context);
-
-            log.debug("Displayed {} member info for target {}", isConfidential ? "confidential" : "public", target);
-        } catch (Exception e) {
-            throw new RuntimeException("Error displaying member info for target " + target, e);
+        Optional<MemberData> memberOptional = memberDataProvider.getByTarget(target);
+        if (memberOptional.isEmpty()) {
+            senders.sendEmbed(interaction, view.renderMemberNotFound(target));
+            return;
         }
+
+        MemberData member = memberOptional.get();
+        GameBuild defaultBuild = member.gameInfo().firstKey();
+        MemberInfoContext context = isConfidential
+                                    ? MemberInfoContext.confidentialInfo(member, defaultBuild)
+                                    : MemberInfoContext.publicInfo(member, defaultBuild);
+
+        InteractionHook hook = interaction.getHook();
+        hook.sendMessage(view.buildInitialMessage(
+                viewer,
+                context,
+                e -> handleBuildSelection(e, context))
+        ).queue();
+        log.debug("Displayed {} member info for target {}", isConfidential ? "confidential" : "public", target);
     }
 
-    public void handleBuildSelection(StringSelectEvent selectEvent, MemberInfoContext context,
-                                     GameBuild selectedBuild) {
-        try {
-            selectEvent.deferEdit().queue();
+    public void handleBuildSelection(StringSelectEvent selectEvent, MemberInfoContext context) {
+        selectEvent.deferEdit().queue();
 
-            MemberInfoContext newContext = context.withBuild(selectedBuild);
-            view.updateMemberInfo(selectEvent.getHook(), selectEvent.getUser(), newContext);
+        String selectedValue = selectEvent.getValues().getFirst();
+        GameBuild selectedBuild = GameBuild.valueOf(selectedValue);
+        MemberInfoContext newContext = context.withBuild(selectedBuild);
 
-            log.debug("Displayed updated info with build selection: {}", selectedBuild.getName());
-        } catch (Exception e) {
-            throw new RuntimeException("Error handling build selection for build " + selectedBuild, e);
-        }
+        selectEvent.getHook().editOriginal(view.buildUpdateMessage(
+                selectEvent.getUser(),
+                newContext,
+                e -> handleBuildSelection(e, context)
+        )).queue();
+        log.debug("Displayed updated info with build selection: {}", selectedBuild.getName());
     }
 
     @Value

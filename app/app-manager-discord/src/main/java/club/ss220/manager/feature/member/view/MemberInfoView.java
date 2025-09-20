@@ -6,21 +6,18 @@ import club.ss220.core.shared.MemberData;
 import club.ss220.core.shared.PlayerData;
 import club.ss220.core.shared.RoleCategory;
 import club.ss220.core.shared.UserData;
-import club.ss220.manager.feature.member.controller.MemberInfoController;
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.GameBuildStyle;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
-import club.ss220.manager.shared.MemberTarget;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.GameBuildStyle;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
 import io.github.freya022.botcommands.api.components.SelectMenus;
-import lombok.RequiredArgsConstructor;
+import io.github.freya022.botcommands.api.components.event.StringSelectEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
@@ -28,55 +25,41 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static club.ss220.manager.feature.member.controller.MemberInfoController.MemberInfoContext;
 
 @Component
-@RequiredArgsConstructor
-public class MemberInfoView {
+public class MemberInfoView extends BasicView {
 
-    private MemberInfoController controller;
     private final SelectMenus selectMenus;
-    private final Senders senders;
-    private final Embeds embeds;
-    private final Formatters formatters;
 
-    @Lazy
-    @Autowired
-    public void setController(MemberInfoController controller) {
-        this.controller = controller;
+    public MemberInfoView(Embeds embeds, Formatters formatters, SelectMenus selectMenus) {
+        super(embeds, formatters);
+        this.selectMenus = selectMenus;
     }
 
-    public void renderMemberInfo(InteractionHook hook, User viewer, MemberInfoContext context) {
-        MessageCreateData message = buildMessageData(viewer, context);
-        hook.setEphemeral(true).sendMessage(message).queue();
-    }
-
-    public void updateMemberInfo(InteractionHook hook, User viewer, MemberInfoContext context) {
-        MessageEditData message = MessageEditData.fromCreateData(buildMessageData(viewer, context));
-        hook.editOriginal(message).queue();
-    }
-
-    public void renderMemberNotFound(InteractionHook hook, MemberTarget target) {
-        senders.sendEmbed(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
-    }
-
-    private MessageCreateData buildMessageData(User viewer, MemberInfoContext context) {
+    public MessageCreateData buildInitialMessage(User viewer, MemberInfoContext context,
+                                                 Consumer<StringSelectEvent> onBuildSelected) {
         MessageEmbed embed = createMemberInfoEmbed(context);
-        ActionRow buildSelectMenu = createBuildSelectMenu(viewer, context);
+        ActionRow buildSelectMenu = createBuildSelectMenu(viewer, context, onBuildSelected);
 
         return new MessageCreateBuilder().setEmbeds(embed).setComponents(buildSelectMenu).build();
     }
 
-    private ActionRow createBuildSelectMenu(User viewer, MemberInfoContext context) {
+    public MessageEditData buildUpdateMessage(User viewer, MemberInfoContext context,
+                                              Consumer<StringSelectEvent> onBuildSelected) {
+        return MessageEditData.fromCreateData(buildInitialMessage(viewer, context, onBuildSelected));
+    }
+
+    private ActionRow createBuildSelectMenu(User viewer, MemberInfoContext context,
+                                            Consumer<StringSelectEvent> onSelected) {
         Set<GameBuild> availableBuilds = context.getMember().gameInfo().keySet();
         GameBuild selectedBuild = context.getSelectedBuild();
 
@@ -90,11 +73,7 @@ public class MemberInfoView {
         StringSelectMenu selectMenu = selectMenus.stringSelectMenu()
                 .ephemeral()
                 .constraints(constraints -> constraints.addUsers(viewer))
-                .bindTo(selectEvent -> {
-                    String selectedValue = selectEvent.getValues().getFirst();
-                    GameBuild newSelectedBuild = GameBuild.valueOf(selectedValue);
-                    controller.handleBuildSelection(selectEvent, context, newSelectedBuild);
-                })
+                .bindTo(onSelected)
                 .setPlaceholder("Игровой билд")
                 .addOptions(options)
                 .setDefaultValues(selectedBuild.name())

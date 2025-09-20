@@ -3,15 +3,13 @@ package club.ss220.manager.feature.note.view;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.NoteData;
 import club.ss220.core.util.StringUtils;
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
-import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.pagination.PageRenderer;
 import club.ss220.manager.shared.pagination.PaginatedContext;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
@@ -21,22 +19,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
-public class NotesView implements PageRenderer<NoteData> {
+public class NotesView extends BasicView implements PageRenderer<NoteData> {
 
     private static final int SHORT_TEXT_LENGTH = 45;
     private static final int MAX_EDIT_HISTORY_LENGTH = 1000;
 
-    private final Embeds embeds;
-    private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderMemberNotFound(net.dv8tion.jda.api.interactions.InteractionHook hook, MemberTarget target) {
-        senders.sendEmbed(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
+    public NotesView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    public void renderNoNotesFound(net.dv8tion.jda.api.interactions.InteractionHook hook) {
-        senders.sendEmbed(hook, embeds.info("Список заметок", "Нет заметок, удовлетворяющих условиям."));
+    public MessageEmbed renderNoNotesFound() {
+        return embeds.info("Список заметок", "Нет заметок, удовлетворяющих условиям.");
     }
 
     @Override

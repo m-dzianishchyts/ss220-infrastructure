@@ -1,4 +1,4 @@
-package club.ss220.manager.presentation;
+package club.ss220.manager.shared.presentation;
 
 import io.github.freya022.botcommands.api.emojis.AppEmojisRegistry;
 import io.github.freya022.botcommands.api.emojis.annotations.AppEmoji;

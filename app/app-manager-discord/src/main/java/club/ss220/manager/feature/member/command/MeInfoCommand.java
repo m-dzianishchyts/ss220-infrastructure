@@ -17,8 +17,6 @@ public class MeInfoCommand extends ApplicationCommand {
     @TopLevelSlashCommandData
     @JDASlashCommand(name = "me", subcommand = "info", description = "Показать информацию о себе.")
     public void onSlashInteraction(GuildSlashEvent event) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        memberInfoController.showMemberInfo(event.getHook(), event.getUser());
+        memberInfoController.renderMemberInfo(event, event.getUser());
     }
 }

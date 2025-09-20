@@ -20,9 +20,7 @@ public class WhoCommand extends ApplicationCommand {
     public void onSlashInteraction(GuildSlashEvent event,
                                    @SlashOption(description = "Игровой сервер.", usePredefinedChoices = true)
                                    ActiveGameServerData server) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
         GameServerData activeServer = server.server();
-        whoController.showPlayersOnServer(event.getHook(), activeServer);
+        whoController.showPlayersOnServer(event, activeServer);
     }
 }

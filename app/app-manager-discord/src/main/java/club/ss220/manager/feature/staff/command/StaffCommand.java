@@ -15,8 +15,6 @@ public class StaffCommand extends ApplicationCommand {
 
     @JDASlashCommand(name = "staff", description = "Показать команду проекта онлайн.")
     public void onSlashInteraction(GuildSlashEvent event) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        staffController.showOnlineStaff(event.getHook());
+        staffController.showOnlineStaff(event);
     }
 }

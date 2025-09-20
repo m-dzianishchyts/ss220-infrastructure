@@ -1,11 +1,10 @@
 package club.ss220.manager.feature.whitelist.view;
 
 import club.ss220.core.shared.WhitelistData;
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
 import club.ss220.manager.shared.pagination.PageRenderer;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class WhitelistVerboseView extends WhitelistView implements PageRenderer<WhitelistData> {
 
-    public WhitelistVerboseView(Embeds embeds, Senders senders, Formatters formatters) {
-        super(embeds, senders, formatters);
+    public WhitelistVerboseView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
     @Override

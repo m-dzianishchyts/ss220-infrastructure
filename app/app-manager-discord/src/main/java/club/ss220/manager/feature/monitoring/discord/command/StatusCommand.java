@@ -17,8 +17,6 @@ public class StatusCommand extends ApplicationCommand {
     @JDASlashCommand(name = "status", description = "Показать статус бота.")
     @TopLevelSlashCommandData(defaultLocked = true)
     public void onSlashInteraction(GuildSlashEvent event) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        statusController.showApplicationStatus(event.getHook(), event.getGuild());
+        statusController.showApplicationStatus(event, event.getGuild());
     }
 }

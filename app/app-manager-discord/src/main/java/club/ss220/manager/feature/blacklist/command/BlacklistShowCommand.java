@@ -34,6 +34,6 @@ public class BlacklistShowCommand extends ApplicationCommand {
                                    @Nullable
                                    @SlashOption(description = "Только активные.")
                                    Boolean onlyActive) {
-        controller.show(event, playerTarget, adminTarget, serverType, onlyActive);
+        controller.showBlacklist(event, playerTarget, adminTarget, serverType, onlyActive);
     }
 }

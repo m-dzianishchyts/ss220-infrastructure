@@ -1,31 +1,25 @@
 package club.ss220.manager.feature.server.view;
 
 import club.ss220.core.shared.GameServerData;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
-import lombok.AllArgsConstructor;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor
-public class WhoView {
+public class WhoView extends BasicView {
 
-    private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderPlayersOnline(InteractionHook hook, GameServerData gameServer, List<String> playersOnline) {
-        MessageEmbed embed = createPlayersOnlineForServerEmbed(gameServer, playersOnline);
-        senders.sendEmbed(hook, embed);
+    public WhoView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    private MessageEmbed createPlayersOnlineForServerEmbed(GameServerData gameServer, List<String> playersOnline) {
+    public MessageEmbed renderPlayersOnline(GameServerData gameServer, List<String> playersOnline) {
         String description = playersOnline.stream()
                 .map(formatters::escape)
                 .sorted(String::compareTo)

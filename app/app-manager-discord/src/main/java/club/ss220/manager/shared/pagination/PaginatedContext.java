@@ -1,8 +1,10 @@
 package club.ss220.manager.shared.pagination;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 @Builder(toBuilder = true)
 public record PaginatedContext<T>(
@@ -32,5 +34,17 @@ public record PaginatedContext<T>(
 
     public PaginatedContext<T> withPageWindow(int start, int end) {
         return toBuilder().startPage(start).endPage(end).build();
+    }
+
+    @Override
+    @NotNull
+    public String toString() {
+        return new StringJoiner(", ", "[", "]")
+                .add("items=" + items.size())
+                .add("pageSize=" + pageSize)
+                .add("page=" + page)
+                .add("startPage=" + startPage)
+                .add("endPage=" + endPage)
+                .toString();
     }
 }

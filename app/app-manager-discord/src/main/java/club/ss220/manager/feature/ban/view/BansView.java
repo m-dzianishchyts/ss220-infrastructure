@@ -3,41 +3,33 @@ package club.ss220.manager.feature.ban.view;
 import club.ss220.core.shared.BanData;
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.util.StringUtils;
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
-import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.pagination.PageRenderer;
 import club.ss220.manager.shared.pagination.PaginatedContext;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
-public class BansView implements PageRenderer<BanData> {
+public class BansView extends BasicView implements PageRenderer<BanData> {
 
     public static final int SHORT_REASON_LENGTH = 45;
     public static final int MAX_EDIT_HISTORY_LENGTH = 1000;
 
-    private final Embeds embeds;
-    private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderMemberNotFound(InteractionHook hook, MemberTarget target) {
-        senders.sendEmbed(hook, embeds.error("Пользователь " + target.getDisplayString() + " не найден."));
+    public BansView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    public void renderNoBansFound(InteractionHook hook) {
-        senders.sendEmbed(hook, embeds.info("Список блокировок", "Нет блокировок, удовлетворяющих условиям."));
+    public MessageEmbed renderNoBansFound() {
+        return embeds.info("Список блокировок", "Нет блокировок, удовлетворяющих условиям.");
     }
 
     @Override

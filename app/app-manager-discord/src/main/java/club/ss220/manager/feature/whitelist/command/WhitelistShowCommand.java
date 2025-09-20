@@ -33,6 +33,6 @@ public class WhitelistShowCommand extends ApplicationCommand {
                                    @Nullable
                                    @SlashOption(description = "Только активные.")
                                    Boolean onlyActive) {
-        controller.show(event, playerTarget, adminTarget, serverType, onlyActive);
+        controller.showWhitelist(event, playerTarget, adminTarget, serverType, onlyActive);
     }
 }

@@ -32,7 +32,7 @@ public class BlacklistAddCommand extends ApplicationCommand {
                                    @Nullable
                                    @SlashOption(description = "Удалить из белого списка.")
                                    Boolean removeWhitelist) {
-        controller.addNew(event, playerTarget, event.getUser(), serverType,
-                          durationDays, reason, removeWhitelist);
+        controller.addBlacklistEntry(event, playerTarget, event.getUser(), serverType,
+                                     durationDays, reason, removeWhitelist);
     }
 }

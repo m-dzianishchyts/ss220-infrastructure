@@ -1,7 +1,7 @@
 package club.ss220.manager.shared.handler;
 
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Senders;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Senders;
 import com.google.common.collect.ImmutableMap;
 import io.github.freya022.botcommands.api.core.GlobalExceptionHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;

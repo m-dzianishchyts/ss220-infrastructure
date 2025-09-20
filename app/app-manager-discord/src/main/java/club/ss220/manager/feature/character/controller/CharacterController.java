@@ -7,11 +7,12 @@ import club.ss220.core.shared.exception.GameBuildOperationNotSupportedException;
 import club.ss220.core.spi.CharacterQuery;
 import club.ss220.manager.feature.character.view.CharacterView;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
+import club.ss220.manager.shared.presentation.Senders;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -26,23 +27,23 @@ public class CharacterController {
     private final GenericPaginationController paginationController;
     private final CharacterView view;
     private final SearchCharactersUseCase searchCharacters;
+    private final Senders senders;
 
-    public void searchCharacters(InteractionHook hook, @Nullable GameBuild build, String name) {
+    public void searchCharacters(IReplyCallback interaction, @Nullable GameBuild build, String name) {
+        interaction.deferReply().setEphemeral(true).queue();
+
         CharacterQuery query = CharacterQuery.builder().build(build).name(name).build();
         try {
             List<GameCharacterData> characters = searchCharacters.getCharactersByQuery(query);
             if (characters.isEmpty()) {
-                view.renderNoCharactersFound(hook, name);
+                senders.sendEmbed(interaction, view.renderNoCharactersFound(name));
             } else {
-                paginationController.show(hook, characters, PAGE_SIZE, view);
+                paginationController.show(interaction, characters, PAGE_SIZE, view);
             }
-
             log.debug("Displayed {} characters for query {}", characters.size(), query);
         } catch (GameBuildOperationNotSupportedException e) {
             log.warn("Character search not supported for build {}", e.getGameBuild());
-            view.renderUnsupportedBuild(hook, e.getGameBuild());
-        } catch (Exception e) {
-            throw new RuntimeException("Error displaying characters for query " + query, e);
+            senders.sendEmbed(interaction, view.renderUnsupportedBuild(e.getGameBuild()));
         }
     }
 }

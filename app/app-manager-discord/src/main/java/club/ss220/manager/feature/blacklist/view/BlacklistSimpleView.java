@@ -1,7 +1,7 @@
 package club.ss220.manager.feature.blacklist.view;
 
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
 import org.springframework.stereotype.Component;
 
 @Component

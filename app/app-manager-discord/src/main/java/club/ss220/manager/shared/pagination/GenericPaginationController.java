@@ -4,7 +4,7 @@ import io.github.freya022.botcommands.api.components.event.ButtonEvent;
 import io.github.freya022.botcommands.api.components.event.StringSelectEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class GenericPaginationController {
 
     private final GenericPaginationView view;
 
-    public <T> void show(InteractionHook hook, List<T> items, int pageSize, PageRenderer<T> renderer) {
+    public <T> void show(IReplyCallback interaction, List<T> items, int pageSize, PageRenderer<T> renderer) {
         int currentPage = 0;
         int totalPages = Math.max(1, (int) Math.ceil((double) items.size() / pageSize));
         PageWindow pageWindow = computeWindow(currentPage, totalPages, PAGE_LIMIT);
@@ -32,29 +32,32 @@ public class GenericPaginationController {
                 .startPage(pageWindow.start())
                 .endPage(pageWindow.end())
                 .build();
-        view.renderFirst(hook, ctx, renderer);
+        view.renderFirst(interaction.getHook(), ctx, renderer);
     }
 
     public <T> void onPageSelected(StringSelectEvent event, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        PaginatedContext<T> newCtx = null;
         try {
             event.deferEdit().queue();
-
             int newPage = Integer.parseInt(event.getValues().getFirst());
-            PaginatedContext<T> newCtx = contextWithWindow(ctx.withPage(newPage));
+            newCtx = contextWithWindow(ctx.withPage(newPage));
             view.update(event.getHook(), newCtx, renderer);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to switch page", e);
+            String message = "Failed to switch page, context = " + ctx + ", new context = " + newCtx;
+            throw new DiscordPaginationException(message, e);
         }
     }
 
     public <T> void onItemSelected(StringSelectEvent event, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
+        Integer index = null;
         try {
             event.deferEdit().queue();
-            int index = Integer.parseInt(event.getValues().getFirst());
+            index = Integer.parseInt(event.getValues().getFirst());
             T item = ctx.pageItems().get(index);
             view.updateToDetails(event.getHook(), item, ctx, renderer);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to show item details", e);
+            String message = "Failed to show item details, context = " + ctx + ", index = " + index;
+            throw new DiscordPaginationException(message, e);
         }
     }
 
@@ -63,7 +66,8 @@ public class GenericPaginationController {
             event.deferEdit().queue();
             view.update(event.getHook(), ctx, renderer);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to return to list", e);
+            String message = "Failed to return to list, context = " + ctx;
+            throw new DiscordPaginationException(message, e);
         }
     }
 

@@ -1,4 +1,4 @@
-package club.ss220.manager.presentation;
+package club.ss220.manager.shared.presentation;
 
 import dev.freya02.jda.emojis.unicode.Emojis;
 import lombok.Getter;

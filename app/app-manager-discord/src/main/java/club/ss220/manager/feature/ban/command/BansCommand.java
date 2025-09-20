@@ -46,9 +46,7 @@ public class BansCommand extends ApplicationCommand {
                                          @Nullable
                                          @SlashOption(description = "Снятые.")
                                          Boolean unbanned) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        bansController.showBans(event.getHook(), playerTarget, adminTarget,
+        bansController.showBans(event, playerTarget, adminTarget,
                                 server, roundId, permanent, banType, expired, unbanned);
     }
 }

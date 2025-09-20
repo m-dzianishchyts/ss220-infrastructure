@@ -2,14 +2,13 @@ package club.ss220.manager.feature.staff.view;
 
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.OnlineStaffStatusData;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.GameBuildStyle;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
-import lombok.AllArgsConstructor;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.GameBuildStyle;
+import club.ss220.manager.shared.presentation.UiConstants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -20,19 +19,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor
-public class StaffView {
+public class StaffView extends BasicView {
 
-    private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderOnlineStaff(InteractionHook hook,
-                                  Map<GameServerData, List<OnlineStaffStatusData>> onlineStaff) {
-        MessageEmbed embed = createOnlineStaffEmbed(onlineStaff);
-        senders.sendEmbed(hook, embed);
+    public StaffView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    private MessageEmbed createOnlineStaffEmbed(Map<GameServerData, List<OnlineStaffStatusData>> serversStaff) {
+    public MessageEmbed renderOnlineStaff(Map<GameServerData, List<OnlineStaffStatusData>> serversStaff) {
         List<MessageEmbed.Field> fields = groupByBuildStyle(serversStaff).entrySet().stream()
                 .map(e -> buildStaffField(e.getKey(), e.getValue()))
                 .toList();

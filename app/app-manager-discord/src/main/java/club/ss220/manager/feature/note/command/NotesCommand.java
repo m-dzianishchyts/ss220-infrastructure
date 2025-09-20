@@ -36,8 +36,6 @@ public class NotesCommand extends ApplicationCommand {
                                         @Nullable
                                         @SlashOption(description = "Активные (не удалённые).")
                                         Boolean active) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        notesController.showNotes(event.getHook(), playerTarget, adminTarget, server, roundId, active);
+        notesController.showNotes(event, playerTarget, adminTarget, server, roundId, active);
     }
 }

@@ -1,4 +1,4 @@
-package club.ss220.manager.presentation;
+package club.ss220.manager.shared.presentation;
 
 import club.ss220.core.config.FormatConfig;
 import com.ibm.icu.text.MessageFormat;

@@ -25,6 +25,6 @@ public class WhitelistMeCommand extends ApplicationCommand {
                                    @Nullable
                                    @SlashOption(description = "Только активные.")
                                    Boolean onlyActive) {
-        controller.showMine(event, event.getUser().getIdLong(), serverType, onlyActive);
+        controller.showUserWhitelist(event, event.getUser().getIdLong(), serverType, onlyActive);
     }
 }

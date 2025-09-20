@@ -3,14 +3,13 @@ package club.ss220.manager.feature.blacklist.view;
 import club.ss220.core.shared.BlacklistEntryData;
 import club.ss220.core.shared.UserData;
 import club.ss220.core.util.StringUtils;
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.UiConstants;
-import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.pagination.PageRenderer;
 import club.ss220.manager.shared.pagination.PaginatedContext;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
@@ -21,23 +20,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
-public class BlacklistView implements PageRenderer<BlacklistEntryData> {
+public class BlacklistView extends BasicView implements PageRenderer<BlacklistEntryData> {
 
     private static final int SHORT_REASON_LENGTH = 45;
 
-    protected final Embeds embeds;
-    protected final Formatters formatters;
-
-    public MessageEmbed renderMemberNotFound(MemberTarget target) {
-        return embeds.error("Пользователь " + target.getDisplayString() + " не найден.");
+    public BlacklistView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    public MessageEmbed renderEmpty() {
+    public MessageEmbed renderNoEntries() {
         return embeds.info("Черный список", "Нет записей, удовлетворяющих условиям.");
     }
 
-    public MessageEmbed renderCreated(BlacklistEntryData bl) {
+    public MessageEmbed renderNewEntry(BlacklistEntryData bl) {
         EmbedBuilder embed = toMessageEmbed(bl);
         embed.setTitle(Emojis.NO_PEDESTRIANS.getFormatted() + " Новая запись в черном списке");
         embed.setColor(UiConstants.COLOR_SUCCESS);

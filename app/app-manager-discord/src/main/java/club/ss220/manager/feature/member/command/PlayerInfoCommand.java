@@ -24,15 +24,11 @@ public class PlayerInfoCommand extends ApplicationCommand {
     public void onSlashInteraction(GuildSlashEvent event,
                                    @SlashOption(description = "Пользователь Discord/Discord ID/CKEY.")
                                    MemberTarget target) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        memberInfoController.showMemberInfo(event.getHook(), event.getUser(), target);
+        memberInfoController.renderMemberInfo(event, event.getUser(), target);
     }
 
     @JDAUserCommand(name = "Информация об игроке", scope = CommandScope.GUILD)
     public void onUserInteraction(GuildUserEvent event) {
-        boolean ephemeral = true;
-        event.deferReply(ephemeral).queue();
-        memberInfoController.showMemberInfo(event.getHook(), event.getUser(), event.getTarget());
+        memberInfoController.renderMemberInfo(event, event.getUser(), event.getTarget());
     }
 }

@@ -1,4 +1,4 @@
-package club.ss220.manager.presentation;
+package club.ss220.manager.shared.presentation;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;

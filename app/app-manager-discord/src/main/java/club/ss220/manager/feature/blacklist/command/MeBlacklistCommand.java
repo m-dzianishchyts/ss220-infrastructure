@@ -25,6 +25,6 @@ public class MeBlacklistCommand extends ApplicationCommand {
                                    @Nullable
                                    @SlashOption(description = "Только активные.")
                                    Boolean activeOnly) {
-        controller.showMine(event, event.getUser().getIdLong(), serverType, activeOnly);
+        controller.showUserBlacklist(event, event.getUser().getIdLong(), serverType, activeOnly);
     }
 }

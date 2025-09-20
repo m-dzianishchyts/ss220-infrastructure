@@ -8,18 +8,17 @@ import club.ss220.core.shared.UserData;
 import club.ss220.core.spi.BlacklistQuery;
 import club.ss220.manager.feature.blacklist.view.BlacklistSimpleView;
 import club.ss220.manager.feature.blacklist.view.BlacklistVerboseView;
-import club.ss220.manager.presentation.Senders;
 import club.ss220.manager.shared.GameServerType;
 import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.application.RoleAssignmentService;
 import club.ss220.manager.shared.application.UserDataProvider;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
+import club.ss220.manager.shared.presentation.Senders;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import org.springframework.stereotype.Component;
 
@@ -42,19 +41,19 @@ public class BlacklistController {
     private final RoleAssignmentService roleAssignmentService;
     private final Senders senders;
 
-    public void show(IReplyCallback interaction,
-                     @Nullable MemberTarget playerTarget,
-                     @Nullable MemberTarget adminTarget,
-                     @Nullable GameServerType serverType,
-                     @Nullable Boolean onlyActive) {
+    public void showBlacklist(IReplyCallback interaction,
+                              @Nullable MemberTarget playerTarget,
+                              @Nullable MemberTarget adminTarget,
+                              @Nullable GameServerType serverType,
+                              @Nullable Boolean onlyActive) {
         interaction.deferReply().setEphemeral(true).queue();
-        InteractionHook hook = interaction.getHook();
+
         BlacklistQuery.BlacklistQueryBuilder builder = BlacklistQuery.builder();
 
         if (playerTarget != null) {
             Optional<UserData> player = userDataProvider.getByTarget(playerTarget);
             if (player.isEmpty()) {
-                senders.sendEmbedEphemeral(hook, view.renderMemberNotFound(playerTarget));
+                senders.sendEmbed(interaction, view.renderMemberNotFound(playerTarget));
                 return;
             }
             builder.playerDiscordId(player.get().discordId());
@@ -63,7 +62,7 @@ public class BlacklistController {
         if (adminTarget != null) {
             Optional<UserData> admin = userDataProvider.getByTarget(adminTarget);
             if (admin.isEmpty()) {
-                senders.sendEmbedEphemeral(hook, view.renderMemberNotFound(adminTarget));
+                senders.sendEmbed(interaction, view.renderMemberNotFound(adminTarget));
                 return;
             }
             builder.adminDiscordId(admin.get().discordId());
@@ -74,17 +73,16 @@ public class BlacklistController {
 
         List<BlacklistEntryData> items = getBlacklistUseCase.execute(builder.build());
         if (items.isEmpty()) {
-            senders.sendEmbedEphemeral(hook, view.renderEmpty());
+            senders.sendEmbed(interaction, view.renderNoEntries());
         } else {
-            paginationController.show(hook, items, PAGE_SIZE, verboseView);
+            paginationController.show(interaction, items, PAGE_SIZE, verboseView);
         }
     }
 
-    public void showMine(IReplyCallback interaction, long discordUserId,
-                         @Nullable GameServerType serverType,
-                         @Nullable Boolean onlyActive) {
+    public void showUserBlacklist(IReplyCallback interaction, long discordUserId,
+                                  @Nullable GameServerType serverType,
+                                  @Nullable Boolean onlyActive) {
         interaction.deferReply().setEphemeral(true).queue();
-        InteractionHook hook = interaction.getHook();
 
         BlacklistQuery.BlacklistQueryBuilder builder = BlacklistQuery.builder().playerDiscordId(discordUserId);
         Optional.ofNullable(serverType).map(GameServerType::name).ifPresent(builder::serverType);
@@ -92,20 +90,17 @@ public class BlacklistController {
 
         List<BlacklistEntryData> items = getBlacklistUseCase.execute(builder.build());
         if (items.isEmpty()) {
-            senders.sendEmbedEphemeral(hook, view.renderEmpty());
+            senders.sendEmbed(interaction, view.renderNoEntries());
         } else {
-            paginationController.show(hook, items, PAGE_SIZE, view);
+            paginationController.show(interaction, items, PAGE_SIZE, view);
         }
     }
 
-    public void addNew(IReplyCallback interaction, MemberTarget playerTarget, User adminUser, GameServerType serverType,
-                       int durationDays, String reason, @Nullable Boolean invalidateWhitelist) {
-        interaction.deferReply().queue();
-        InteractionHook hook = interaction.getHook();
-
+    public void addBlacklistEntry(IReplyCallback interaction, MemberTarget playerTarget, User adminUser, GameServerType serverType,
+                                  int durationDays, String reason, @Nullable Boolean invalidateWhitelist) {
         Optional<UserData> user = userDataProvider.getByTarget(playerTarget);
         if (user.isEmpty()) {
-            senders.sendEmbedEphemeral(hook, view.renderMemberNotFound(playerTarget));
+            senders.sendEmbedEphemeral(interaction, view.renderMemberNotFound(playerTarget));
             return;
         }
         long playerDiscordId = user.get().discordId();
@@ -120,9 +115,9 @@ public class BlacklistController {
                 .build();
         BlacklistEntryData bl = addBlacklistEntryUseCase.execute(request);
 
-        Guild guild = hook.getInteraction().getGuild();
+        Guild guild = interaction.getGuild();
         roleAssignmentService.removeWhitelistRole(guild, playerDiscordId, serverType);
 
-        senders.sendEmbed(hook, view.renderCreated(bl));
+        senders.sendEmbed(interaction, view.renderNewEntry(bl));
     }
 }

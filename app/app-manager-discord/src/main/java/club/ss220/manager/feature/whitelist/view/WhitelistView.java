@@ -2,15 +2,14 @@ package club.ss220.manager.feature.whitelist.view;
 
 import club.ss220.core.shared.UserData;
 import club.ss220.core.shared.WhitelistData;
-import club.ss220.manager.presentation.Embeds;
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
 import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.pagination.PageRenderer;
 import club.ss220.manager.shared.pagination.PaginatedContext;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
@@ -21,22 +20,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
-public class WhitelistView implements PageRenderer<WhitelistData> {
+public class WhitelistView extends BasicView implements PageRenderer<WhitelistData> {
 
-    protected final Embeds embeds;
-    protected final Senders senders;
-    protected final Formatters formatters;
-
-    public MessageEmbed renderMemberNotFound(MemberTarget target) {
-        return embeds.error("Пользователь " + target.getDisplayString() + " не найден.");
+    public WhitelistView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    public MessageEmbed renderEmpty() {
+    public MessageEmbed renderNoEntries() {
         return embeds.info("Белый список", "Нет записей, удовлетворяющих условиям.");
     }
 
-    public MessageEmbed renderCreated(WhitelistData wl) {
+    public MessageEmbed renderNewEntry(WhitelistData wl) {
         EmbedBuilder embed = toMessageEmbed(wl);
         embed.setTitle(Emojis.PASSPORT_CONTROL.getFormatted() + " Новая запись в белом списке");
         embed.setColor(UiConstants.COLOR_SUCCESS);
@@ -44,8 +38,7 @@ public class WhitelistView implements PageRenderer<WhitelistData> {
     }
 
     public MessageEmbed renderUserBlacklisted(MemberTarget target) {
-        String message = "Пользователь " + target.getDisplayString() + " находится в черном списке.";
-        return embeds.error(message);
+        return embeds.error("Пользователь " + target.getDisplayString() + " находится в черном списке.");
     }
 
     @Override

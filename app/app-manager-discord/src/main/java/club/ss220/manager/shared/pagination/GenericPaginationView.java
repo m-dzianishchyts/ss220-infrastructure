@@ -1,6 +1,7 @@
 package club.ss220.manager.shared.pagination;
 
 import dev.freya02.jda.emojis.unicode.Emojis;
+import io.github.freya022.botcommands.api.components.Button;
 import io.github.freya022.botcommands.api.components.Buttons;
 import io.github.freya022.botcommands.api.components.SelectMenus;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class GenericPaginationView {
     public <T> void renderFirst(InteractionHook hook, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
         User viewer = hook.getInteraction().getUser();
         MessageCreateData data = buildMessage(viewer, ctx, renderer);
-        hook.setEphemeral(true).sendMessage(data).queue();
+        hook.sendMessage(data).queue();
     }
 
     public <T> void update(InteractionHook hook, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
@@ -78,7 +79,7 @@ public class GenericPaginationView {
 
     public <T> void updateToDetails(InteractionHook hook, T item, PaginatedContext<T> ctx, PageRenderer<T> renderer) {
         MessageEmbed embed = renderer.renderDetails(item);
-        var back = buttons.of(ButtonStyle.SECONDARY, "Назад", Emojis.ARROW_BACKWARD)
+        Button back = buttons.of(ButtonStyle.SECONDARY, "Назад", Emojis.ARROW_BACKWARD)
                 .ephemeral()
                 .bindTo(event -> ctx.controller().onBack(event, ctx, renderer))
                 .build();

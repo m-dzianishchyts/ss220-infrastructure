@@ -2,34 +2,29 @@ package club.ss220.manager.feature.monitoring.server.view;
 
 import club.ss220.core.shared.GameServerData;
 import club.ss220.core.shared.GameServerStatusData;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DebugView {
+public class DebugView extends BasicView {
 
-    private final Senders senders;
     private final ObjectMapper objectMapper;
 
-    public DebugView(Senders senders) {
-        this.senders = senders;
+    public DebugView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
         this.objectMapper = new ObjectMapper();
         this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT, SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
     }
 
-    public void renderServerStatus(InteractionHook hook, GameServerData server, GameServerStatusData serverStatus) {
-        MessageEmbed embed = createServerStatusEmbed(server, serverStatus);
-        senders.sendEmbed(hook, embed);
-    }
-
-    private MessageEmbed createServerStatusEmbed(GameServerData server, GameServerStatusData serverStatus) {
+    public MessageEmbed renderServerStatus(GameServerData server, GameServerStatusData serverStatus) {
         return new EmbedBuilder()
                 .setTitle("Статус сервера " + server.fullName())
                 .setDescription(createServerStatusBlock(serverStatus))

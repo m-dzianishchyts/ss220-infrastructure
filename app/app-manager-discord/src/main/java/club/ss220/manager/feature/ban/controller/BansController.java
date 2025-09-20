@@ -9,10 +9,11 @@ import club.ss220.manager.feature.ban.view.BansView;
 import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.application.MemberDataProvider;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
+import club.ss220.manager.shared.presentation.Senders;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,52 +30,50 @@ public class BansController {
     private final GenericPaginationController paginationController;
     private final MemberDataProvider memberDataProvider;
     private final GetBansUseCase getBansUseCase;
+    private final Senders senders;
 
-    public void showBans(InteractionHook hook,
+    public void showBans(IReplyCallback interaction,
                          @Nullable MemberTarget playerTarget, @Nullable MemberTarget adminTarget,
                          @Nullable GameServerData server, @Nullable Integer roundId,
                          @Nullable Boolean permanent, @Nullable BanData.BanType banType,
                          @Nullable Boolean expired, @Nullable Boolean unbanned) {
-        try {
-            BanQuery.BanQueryBuilder builder = BanQuery.builder();
+        interaction.deferReply().setEphemeral(true).queue();
 
-            if (playerTarget != null) {
-                Optional<MemberData> playerData = memberDataProvider.getByTarget(playerTarget);
-                if (playerData.isEmpty()) {
-                    view.renderMemberNotFound(hook, playerTarget);
-                    return;
-                }
-                builder.ckey(playerData.get().userData().ckey());
+        BanQuery.BanQueryBuilder builder = BanQuery.builder();
+
+        if (playerTarget != null) {
+            Optional<MemberData> playerData = memberDataProvider.getByTarget(playerTarget);
+            if (playerData.isEmpty()) {
+                senders.sendEmbed(interaction, view.renderMemberNotFound(playerTarget));
+                return;
             }
-
-            if (adminTarget != null) {
-                Optional<MemberData> adminData = memberDataProvider.getByTarget(adminTarget);
-                if (adminData.isEmpty()) {
-                    view.renderMemberNotFound(hook, adminTarget);
-                    return;
-                }
-                builder.adminCkey(adminData.get().userData().ckey());
-            }
-
-            BanQuery query = builder
-                    .server(server)
-                    .roundId(roundId)
-                    .permanent(permanent)
-                    .banType(banType)
-                    .expired(expired)
-                    .unbanned(unbanned)
-                    .build();
-
-            List<BanData> bans = getBansUseCase.execute(query);
-            if (bans.isEmpty()) {
-                view.renderNoBansFound(hook);
-            } else {
-                paginationController.show(hook, bans, PAGE_SIZE, view);
-            }
-
-            log.debug("Displayed {} bans for query {}", bans.size(), query);
-        } catch (Exception e) {
-            throw new RuntimeException("Error displaying bans", e);
+            builder.ckey(playerData.get().userData().ckey());
         }
+
+        if (adminTarget != null) {
+            Optional<MemberData> adminData = memberDataProvider.getByTarget(adminTarget);
+            if (adminData.isEmpty()) {
+                senders.sendEmbed(interaction, view.renderMemberNotFound(adminTarget));
+                return;
+            }
+            builder.adminCkey(adminData.get().userData().ckey());
+        }
+
+        BanQuery query = builder
+                .server(server)
+                .roundId(roundId)
+                .permanent(permanent)
+                .banType(banType)
+                .expired(expired)
+                .unbanned(unbanned)
+                .build();
+
+        List<BanData> bans = getBansUseCase.execute(query);
+        if (bans.isEmpty()) {
+            senders.sendEmbed(interaction, view.renderNoBansFound());
+        } else {
+            paginationController.show(interaction, bans, PAGE_SIZE, view);
+        }
+        log.debug("Displayed {} bans for query {}", bans.size(), query);
     }
 }

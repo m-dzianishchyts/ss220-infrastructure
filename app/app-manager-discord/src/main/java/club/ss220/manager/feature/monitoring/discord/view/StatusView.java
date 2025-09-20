@@ -1,32 +1,26 @@
 package club.ss220.manager.feature.monitoring.discord.view;
 
-import club.ss220.manager.presentation.Formatters;
-import club.ss220.manager.presentation.Senders;
-import club.ss220.manager.presentation.UiConstants;
 import club.ss220.manager.shared.ApplicationStatus;
+import club.ss220.manager.shared.presentation.BasicView;
+import club.ss220.manager.shared.presentation.Embeds;
+import club.ss220.manager.shared.presentation.Formatters;
+import club.ss220.manager.shared.presentation.UiConstants;
 import dev.freya02.jda.emojis.unicode.Emojis;
-import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.stereotype.Component;
 import org.springframework.util.unit.DataSize;
 
 @Component
-@AllArgsConstructor
-public class StatusView {
+public class StatusView extends BasicView {
 
-    private final Senders senders;
-    private final Formatters formatters;
-
-    public void renderApplicationStatus(InteractionHook hook, ApplicationStatus applicationStatus) {
-        MessageEmbed embed = createApplicationStatusEmbed(applicationStatus);
-        senders.sendEmbed(hook, embed);
+    public StatusView(Embeds embeds, Formatters formatters) {
+        super(embeds, formatters);
     }
 
-    private MessageEmbed createApplicationStatusEmbed(ApplicationStatus applicationStatus) {
+    public MessageEmbed renderApplicationStatus(ApplicationStatus applicationStatus) {
         EmbedBuilder embed = new EmbedBuilder();
         ApplicationStatus.Level summaryLevel = applicationStatus.getSummaryLevel();
         embed.setTitle(mapStatusLevel(summaryLevel).getFormatted() + " " + statusLevelDescription(summaryLevel));
