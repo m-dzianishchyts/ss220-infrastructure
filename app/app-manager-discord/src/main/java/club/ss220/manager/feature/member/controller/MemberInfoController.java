@@ -9,11 +9,11 @@ import club.ss220.manager.shared.presentation.Senders;
 import io.github.freya022.botcommands.api.components.event.StringSelectEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -54,10 +54,10 @@ public class MemberInfoController {
         }
 
         MemberData member = memberOptional.get();
-        GameBuild defaultBuild = member.gameInfo().firstKey();
+        GameBuild defaultBuild = member.gameInfo().isEmpty() ? null : member.gameInfo().firstKey();
         MemberInfoContext context = isConfidential
-                                    ? MemberInfoContext.confidentialInfo(member, defaultBuild)
-                                    : MemberInfoContext.publicInfo(member, defaultBuild);
+                ? MemberInfoContext.confidentialInfo(member, defaultBuild)
+                : MemberInfoContext.publicInfo(member, defaultBuild);
 
         InteractionHook hook = interaction.getHook();
         hook.sendMessage(view.buildInitialMessage(
@@ -83,13 +83,8 @@ public class MemberInfoController {
         log.debug("Displayed updated info with build selection: {}", selectedBuild.getName());
     }
 
-    @Value
     @Builder(toBuilder = true)
-    public static class MemberInfoContext {
-
-        MemberData member;
-        GameBuild selectedBuild;
-        boolean confidential;
+    public record MemberInfoContext(@Nullable GameBuild selectedBuild, MemberData member, boolean confidential) {
 
         public static MemberInfoContext publicInfo(MemberData member, GameBuild selectedBuild) {
             return MemberInfoContext.builder()

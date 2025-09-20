@@ -28,7 +28,9 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -48,9 +50,11 @@ public class MemberInfoView extends BasicView {
     public MessageCreateData buildInitialMessage(User viewer, MemberInfoContext context,
                                                  Consumer<StringSelectEvent> onBuildSelected) {
         MessageEmbed embed = createMemberInfoEmbed(context);
-        ActionRow buildSelectMenu = createBuildSelectMenu(viewer, context, onBuildSelected);
+        Optional<ActionRow> buildSelectMenu = createBuildSelectMenu(viewer, context, onBuildSelected);
 
-        return new MessageCreateBuilder().setEmbeds(embed).setComponents(buildSelectMenu).build();
+        MessageCreateBuilder builder = new MessageCreateBuilder().setEmbeds(embed);
+        buildSelectMenu.ifPresent(builder::addComponents);
+        return builder.build();
     }
 
     public MessageEditData buildUpdateMessage(User viewer, MemberInfoContext context,
@@ -58,10 +62,14 @@ public class MemberInfoView extends BasicView {
         return MessageEditData.fromCreateData(buildInitialMessage(viewer, context, onBuildSelected));
     }
 
-    private ActionRow createBuildSelectMenu(User viewer, MemberInfoContext context,
-                                            Consumer<StringSelectEvent> onSelected) {
-        Set<GameBuild> availableBuilds = context.getMember().gameInfo().keySet();
-        GameBuild selectedBuild = context.getSelectedBuild();
+    private Optional<ActionRow> createBuildSelectMenu(User viewer, MemberInfoContext context,
+                                                      Consumer<StringSelectEvent> onSelected) {
+        if (context.selectedBuild() == null || context.member().gameInfo().isEmpty()) {
+            return Optional.empty();
+        }
+
+        Set<GameBuild> availableBuilds = context.member().gameInfo().keySet();
+        GameBuild selectedBuild = context.selectedBuild();
 
         List<SelectOption> options = availableBuilds.stream()
                 .map(build -> {
@@ -79,30 +87,35 @@ public class MemberInfoView extends BasicView {
                 .setDefaultValues(selectedBuild.name())
                 .build();
 
-        return ActionRow.of(selectMenu);
+        return Optional.of(ActionRow.of(selectMenu));
     }
 
     private MessageEmbed createMemberInfoEmbed(MemberInfoContext context) {
-        MemberData member = context.getMember();
-        GameBuild selectedBuild = context.getSelectedBuild();
-        boolean isConfidential = context.isConfidential();
+        MemberData member = context.member();
+        GameBuild selectedBuild = context.selectedBuild();
 
         UserData userData = member.userData();
-        PlayerData player = member.gameInfo().get(selectedBuild);
         String description = "**Discord:** " + User.fromId(userData.discordId()).getAsMention() + "\n"
-                             + "**CKEY:** " + userData.ckey() + "\n\n"
-                             + createPlayerInfoBlock(player, isConfidential);
+                             + "**CKEY:** " + userData.ckey();
+        List<MessageEmbed.Field> fields = new ArrayList<>();
 
-        List<MessageEmbed.Field> fields = List.of(
-                playerExpField(player),
-                playerCharactersField(player.characters())
-        );
+        Optional<PlayerData> optionalPlayerData = Optional.of(member.gameInfo())
+                .filter(m -> !m.isEmpty())
+                .map(m -> m.get(selectedBuild));
+        if (optionalPlayerData.isPresent()) {
+            PlayerData playerData = optionalPlayerData.get();
+            description += "\n\n" + createPlayerInfoBlock(playerData, context.confidential());
+            fields.addAll(List.of(
+                    playerExpField(playerData),
+                    playerCharactersField(playerData.characters())
+            ));
+        }
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Информация о пользователе " + userData.id());
         embed.setDescription(description);
         embed.getFields().addAll(fields);
-        if (isConfidential) {
+        if (context.confidential() && !fields.isEmpty()) {
             embed.setFooter("Осторожно, сообщение содержит конфиденциальные данные.");
         }
         embed.setColor(UiConstants.COLOR_INFO);
