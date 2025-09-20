@@ -10,8 +10,8 @@ import club.ss220.manager.feature.blacklist.view.BlacklistSimpleView;
 import club.ss220.manager.feature.blacklist.view.BlacklistVerboseView;
 import club.ss220.manager.shared.GameServerType;
 import club.ss220.manager.shared.MemberTarget;
-import club.ss220.manager.shared.application.RoleAssignmentService;
 import club.ss220.manager.shared.application.UserDataProvider;
+import club.ss220.manager.shared.events.WhitelistUpdateEvent;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
 import club.ss220.manager.shared.presentation.Senders;
 import jakarta.annotation.Nullable;
@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,10 +36,12 @@ public class BlacklistController {
     private final BlacklistSimpleView view;
     private final BlacklistVerboseView verboseView;
     private final GenericPaginationController paginationController;
+
     private final UserDataProvider userDataProvider;
     private final GetBlacklistUseCase getBlacklistUseCase;
     private final AddBlacklistEntryUseCase addBlacklistEntryUseCase;
-    private final RoleAssignmentService roleAssignmentService;
+    private final ApplicationEventPublisher eventPublisher;
+
     private final Senders senders;
 
     public void showBlacklist(IReplyCallback interaction,
@@ -96,7 +99,8 @@ public class BlacklistController {
         }
     }
 
-    public void addBlacklistEntry(IReplyCallback interaction, MemberTarget playerTarget, User adminUser, GameServerType serverType,
+    public void addBlacklistEntry(IReplyCallback interaction, MemberTarget playerTarget, User adminUser,
+                                  GameServerType serverType,
                                   int durationDays, String reason, @Nullable Boolean invalidateWhitelist) {
         Optional<UserData> user = userDataProvider.getByTarget(playerTarget);
         if (user.isEmpty()) {
@@ -116,8 +120,7 @@ public class BlacklistController {
         BlacklistEntryData bl = addBlacklistEntryUseCase.execute(request);
 
         Guild guild = interaction.getGuild();
-        roleAssignmentService.removeWhitelistRole(guild, playerDiscordId, serverType);
-
+        eventPublisher.publishEvent(WhitelistUpdateEvent.remove(guild, serverType, playerDiscordId));
         senders.sendEmbed(interaction, view.renderNewEntry(bl));
     }
 }

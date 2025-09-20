@@ -48,6 +48,9 @@ application:
     central:
       endpoint: http://localhost:8080
       token: example_central_token
+  schedules:
+    whitelist-validation:
+      cron: "@hourly"
 
 logging:
   file:

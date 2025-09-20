@@ -11,8 +11,8 @@ import club.ss220.manager.feature.whitelist.view.WhitelistSimpleView;
 import club.ss220.manager.feature.whitelist.view.WhitelistVerboseView;
 import club.ss220.manager.shared.GameServerType;
 import club.ss220.manager.shared.MemberTarget;
-import club.ss220.manager.shared.application.RoleAssignmentService;
 import club.ss220.manager.shared.application.UserDataProvider;
+import club.ss220.manager.shared.events.WhitelistUpdateEvent;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
 import club.ss220.manager.shared.presentation.Senders;
 import jakarta.annotation.Nullable;
@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,10 +37,12 @@ public class WhitelistController {
     private final WhitelistSimpleView view;
     private final WhitelistVerboseView verboseView;
     private final GenericPaginationController paginationController;
+
     private final UserDataProvider userDataProvider;
     private final GetWhitelistUseCase getWhitelistUseCase;
     private final AddWhitelistEntryUseCase addWhitelistEntryUseCase;
-    private final RoleAssignmentService roleAssignmentService;
+    private final ApplicationEventPublisher eventPublisher;
+
     private final Senders senders;
 
     public void showWhitelist(IReplyCallback interaction,
@@ -118,8 +121,7 @@ public class WhitelistController {
         try {
             WhitelistData wl = addWhitelistEntryUseCase.execute(request);
             Guild guild = interaction.getGuild();
-            roleAssignmentService.addWhitelistRole(guild, playerDiscordId, serverType);
-
+            eventPublisher.publishEvent(WhitelistUpdateEvent.add(guild, serverType, playerDiscordId));
             senders.sendEmbed(interaction, view.renderNewEntry(wl));
         } catch (UserBlacklistedException _) {
             senders.sendEmbedEphemeral(interaction, view.renderUserBlacklisted(playerTarget));
