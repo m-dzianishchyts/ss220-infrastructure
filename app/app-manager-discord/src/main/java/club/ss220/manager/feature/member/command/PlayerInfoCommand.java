@@ -27,7 +27,7 @@ public class PlayerInfoCommand extends ApplicationCommand {
         memberInfoController.renderMemberInfo(event, event.getUser(), target);
     }
 
-    @JDAUserCommand(name = "Информация об игроке", scope = CommandScope.GUILD)
+    @JDAUserCommand(name = "Информация об игроке", scope = CommandScope.GUILD, defaultLocked = true)
     public void onUserInteraction(GuildUserEvent event) {
         memberInfoController.renderMemberInfo(event, event.getUser(), event.getTarget());
     }

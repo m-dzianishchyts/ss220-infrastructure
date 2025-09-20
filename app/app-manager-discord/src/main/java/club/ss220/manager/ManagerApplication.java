@@ -1,6 +1,7 @@
 package club.ss220.manager;
 
 import club.ss220.manager.config.ManagerApplicationConfig;
+import club.ss220.manager.shared.presentation.Commands;
 import io.github.freya022.botcommands.api.core.JDAService;
 import io.github.freya022.botcommands.api.core.config.JDAConfiguration;
 import io.github.freya022.botcommands.api.core.events.BReadyEvent;
@@ -37,6 +38,7 @@ public class ManagerApplication extends JDAService {
     private final JDAConfiguration jdaConfig;
     private final ManagerApplicationConfig appConfig;
     private final ResourceLoader resourceLoader;
+    private final Commands commands;
 
     @NotNull
     @Override
@@ -83,7 +85,8 @@ public class ManagerApplication extends JDAService {
 
             long globalCommands = jda.retrieveCommands().complete().size();
             long guildCommands = jda.getGuilds().stream()
-                    .mapToLong(guild -> guild.retrieveCommands().complete().size())
+                    .map(guild -> guild.retrieveCommands().complete())
+                    .mapToLong(cmds -> cmds.stream().mapToLong(c -> commands.flattenCommandInfo(c).size()).sum())
                     .max().orElse(0);
             log.info("Bot started with {} global commands and {} guild commands", globalCommands, guildCommands);
         }
