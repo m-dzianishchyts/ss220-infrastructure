@@ -1,0 +1,29 @@
+{
+    "general_error_message": "Произошла непредвиденная ошибка, попробуйте позже. Разработчики уведомлены о проблеме.",
+
+    "user.perm.error.message": "Вы не можете выполнить данную операцию.",
+    "bot.perm.error.message": "Приложение имеет недостаточно прав: {permissions}.",
+    "owner.only.error.message": "Данная операция доступна только разработчикам.",
+
+    "user.rate_limit.message": "Вы сможете выполнить эту операцию не раньше {delay}.",
+    "channel.rate_limit.message": "В этом канале вы сможете выполнить эту операцию не раньше {delay}.",
+    "guild.rate_limit.message": "На этом сервере вы сможете выполнить эту операцию не раньше {delay}.",
+
+    "application_commands_not_available": "Команды в данный момент недоступны, попробуйте позже.",
+    "command.not.found.message": "Неизвестная команда, возможно, вы имели в виду: {suggestions}.",
+
+    "resolver.channel.not_found.message": "Указанный канал больше не существует.",
+    "resolver.channel.missing_access.message": "Приложение не имеет доступа к каналу {channel_mention}.",
+    "resolver.user.not_found.message": "Указанный пользователь больше не существует.",
+
+    "closed.dm.error.message": "Не удалось отправить Вам личное сообщение, пожалуйста, предоставьте возможность пользователям с этого сервера отправлять Вам личные сообщения.",
+
+    "slash.command.unresolvable.option.message": "Не удалось обработать параметр '{optionName}'.",
+
+    "nsfw.only.error.message": "Эта операция доступна только в каналах 18+.",
+
+    "component.not.allowed.error.message": "Вы не можете выполнить данную операцию.",
+    "component.expired.error.message": "Этот элемент больше не доступен.",
+
+    "modal.expired.error.message": "Данное модальное окно больше не доступно."
+}
