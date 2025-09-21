@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import org.apache.commons.collections4.SetUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,9 +37,6 @@ public class WhitelistRolesValidationJob {
     private final GetWhitelistUseCase getWhitelistUseCase;
     private final ApplicationEventPublisher eventPublisher;
 
-    @Value("${application.schedules.whitelist-validation.enabled:#{true}}")
-    private boolean enabled;
-
     @BEventListener
     public void onReady(ReadyEvent event) {
         jda = event.getJDA();
@@ -48,10 +44,6 @@ public class WhitelistRolesValidationJob {
 
     @Scheduled(cron = "${application.schedules.whitelist-validation.cron}")
     public void validateGuilds() {
-        if (!enabled) {
-            log.debug("Whitelist roles validation job is disabled. Skipping job");
-            return;
-        }
         if (jda == null) {
             log.warn("JDA is not ready, skipping job");
             return;
