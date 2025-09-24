@@ -25,6 +25,10 @@ spring:
   main:
     banner-mode: off
 
+jda:
+  intents:
+    - GUILD_MEMBERS
+
 botcommands:
   application:
     forceGuildCommands: true
