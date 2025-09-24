@@ -42,8 +42,7 @@ application:
   discord:
     token: example_bot_token
     profile:
-      name: SS220 Manager
-      avatar: classpath:images/profile.png
+      nickname: SS220 Manager
     game:
       server-types:
         - name: prime

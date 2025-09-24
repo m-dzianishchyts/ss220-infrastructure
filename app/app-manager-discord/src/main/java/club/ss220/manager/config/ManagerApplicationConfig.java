@@ -15,9 +15,7 @@ public class ManagerApplicationConfig {
     private ProfileConfig profile;
 
     public record ProfileConfig(
-            String name,
             String nickname,
-            String avatar,
             @DefaultValue("true")
             boolean autoUpdate
     ) { }
