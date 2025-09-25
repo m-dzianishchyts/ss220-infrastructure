@@ -81,13 +81,13 @@
     </dependencies>
 
     <build>
+        <finalName>${project.groupId}.${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>club.ss220.manager.ManagerApplication</mainClass>
-                    <finalName>${project.groupId}.${project.artifactId}</finalName>
                 </configuration>
             </plugin>
         </plugins>
