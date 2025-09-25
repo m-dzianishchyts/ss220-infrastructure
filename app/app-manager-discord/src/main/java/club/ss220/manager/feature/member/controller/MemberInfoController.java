@@ -30,22 +30,27 @@ public class MemberInfoController {
     public void renderMemberInfo(IReplyCallback interaction, User viewer) {
         MemberTarget target = MemberTarget.fromUser(viewer);
         boolean isConfidential = false;
-        renderMemberInfo(interaction, viewer, target, isConfidential);
+        boolean isEphemeral = true;
+        renderMemberInfo(interaction, viewer, target, isConfidential, isEphemeral);
     }
 
     public void renderMemberInfo(IReplyCallback interaction, User viewer, User target) {
         MemberTarget memberTarget = MemberTarget.fromUser(target);
-        boolean isConfidential = true;
-        renderMemberInfo(interaction, viewer, memberTarget, isConfidential);
+        boolean isConfidential = false;
+        boolean isEphemeral = isConfidential;
+        renderMemberInfo(interaction, viewer, memberTarget, isConfidential, isEphemeral);
     }
 
-    public void renderMemberInfo(IReplyCallback interaction, User viewer, MemberTarget target) {
-        boolean isConfidential = true;
-        renderMemberInfo(interaction, viewer, target, isConfidential);
+    public void renderMemberInfo(IReplyCallback interaction, User viewer, MemberTarget target,
+                                 @Nullable Boolean confidential) {
+        boolean isConfidential = Optional.ofNullable(confidential).orElse(false);
+        boolean isEphemeral = isConfidential;
+        renderMemberInfo(interaction, viewer, target, isConfidential, isEphemeral);
     }
 
-    public void renderMemberInfo(IReplyCallback interaction, User viewer, MemberTarget target, boolean isConfidential) {
-        interaction.deferReply().setEphemeral(true).queue();
+    public void renderMemberInfo(IReplyCallback interaction, User viewer, MemberTarget target,
+                                 boolean isConfidential, boolean isEphemeral) {
+        interaction.deferReply().setEphemeral(isEphemeral).queue();
 
         Optional<MemberData> memberOptional = memberDataProvider.getByTarget(target);
         if (memberOptional.isEmpty()) {

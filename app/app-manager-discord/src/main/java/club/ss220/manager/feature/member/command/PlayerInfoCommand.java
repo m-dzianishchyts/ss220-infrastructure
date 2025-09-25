@@ -11,6 +11,7 @@ import io.github.freya022.botcommands.api.commands.application.slash.GuildSlashE
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.JDASlashCommand;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.SlashOption;
 import io.github.freya022.botcommands.api.commands.application.slash.annotations.TopLevelSlashCommandData;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 
 @Command
@@ -23,8 +24,11 @@ public class PlayerInfoCommand extends ApplicationCommand {
     @TopLevelSlashCommandData(defaultLocked = true)
     public void onSlashInteraction(GuildSlashEvent event,
                                    @SlashOption(description = "Пользователь Discord/Discord ID/CKEY.")
-                                   MemberTarget target) {
-        memberInfoController.renderMemberInfo(event, event.getUser(), target);
+                                   MemberTarget target,
+                                   @Nullable
+                                   @SlashOption(description = "Включить конфиденциальную информацию.")
+                                   Boolean confidential) {
+        memberInfoController.renderMemberInfo(event, event.getUser(), target, confidential);
     }
 
     @JDAUserCommand(name = "Информация об игроке", scope = CommandScope.GUILD, defaultLocked = true)
