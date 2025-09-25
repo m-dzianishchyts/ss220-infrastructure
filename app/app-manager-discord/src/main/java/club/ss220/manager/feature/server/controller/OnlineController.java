@@ -25,7 +25,7 @@ public class OnlineController {
     private final Senders senders;
 
     public void showPlayersOnline(IReplyCallback interaction) {
-        interaction.deferReply().setEphemeral(true).queue();
+        interaction.deferReply().queue();
 
         List<GameServerData> servers = gameConfig.getServers();
         Map<GameServerData, GameServerStatusData> serversStatuses = getAllServersStatus.execute(servers);

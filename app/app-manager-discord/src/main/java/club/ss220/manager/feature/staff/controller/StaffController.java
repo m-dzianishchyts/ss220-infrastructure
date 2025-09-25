@@ -25,7 +25,7 @@ public class StaffController {
     private final Senders senders;
 
     public void showOnlineStaff(IReplyCallback interaction) {
-        interaction.deferReply().setEphemeral(true).queue();
+        interaction.deferReply().queue();
 
         List<GameServerData> servers = gameConfig.getServers();
         Map<GameServerData, List<OnlineStaffStatusData>> onlineStaff = getOnlineStaffListUseCase.execute(servers);

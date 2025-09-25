@@ -22,7 +22,7 @@ public class WhoController {
 
     public void showPlayersOnServer(IReplyCallback interaction, GameServerData server) {
         List<String> playersOnline = getPlayersList.execute(server);
-        senders.sendEmbedEphemeral(interaction, view.renderPlayersOnline(server, playersOnline));
+        senders.sendEmbed(interaction, view.renderPlayersOnline(server, playersOnline));
         log.debug("Displayed {} players on server {}", playersOnline.size(), server.fullName());
     }
 }

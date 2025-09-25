@@ -21,7 +21,7 @@ public class DebugController {
 
     public void showServerDebugInfo(IReplyCallback interaction, GameServerData server) {
         GameServerStatusData serverStatus = getServerStatus.execute(server);
-        senders.sendEmbedEphemeral(interaction, view.renderServerStatus(server, serverStatus));
+        senders.sendEmbed(interaction, view.renderServerStatus(server, serverStatus));
         log.debug("Displayed debug info for server {}", server.id());
     }
 }

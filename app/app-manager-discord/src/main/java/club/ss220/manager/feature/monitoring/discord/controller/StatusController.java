@@ -21,7 +21,7 @@ public class StatusController {
 
     public void showApplicationStatus(IReplyCallback interaction, Guild guild) {
         ApplicationStatus applicationStatus = applicationStatusService.getApplicationStatus(guild);
-        senders.sendEmbedEphemeral(interaction, view.renderApplicationStatus(applicationStatus));
+        senders.sendEmbed(interaction, view.renderApplicationStatus(applicationStatus));
         log.debug("Displayed application status for guild {}", guild.getId());
     }
 }
