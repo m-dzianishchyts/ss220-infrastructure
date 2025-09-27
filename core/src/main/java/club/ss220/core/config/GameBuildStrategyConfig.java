@@ -5,6 +5,7 @@ import club.ss220.core.spi.BanStorage;
 import club.ss220.core.spi.CharacterStorage;
 import club.ss220.core.spi.GameServerPort;
 import club.ss220.core.spi.NoteStorage;
+import club.ss220.core.spi.PlayerStorage;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,33 +24,43 @@ public class GameBuildStrategyConfig {
                 GameBuild.BANDASTATION, bandastationClient
         );
     }
-
+    
     @Bean
-    public Map<GameBuild, BanStorage> banRepositoryMap(
-            @Qualifier(GameConfig.BUILD_PARADISE) BanStorage paradiseRepository,
-            @Qualifier(GameConfig.BUILD_BANDASTRATION) BanStorage bandastationRepository) {
+    public Map<GameBuild, PlayerStorage> playerStorageMap(
+            @Qualifier(GameConfig.BUILD_PARADISE) PlayerStorage paradiseStorage,
+            @Qualifier(GameConfig.BUILD_BANDASTRATION) PlayerStorage bandastationStorage) {
         return Map.of(
-                GameBuild.PARADISE, paradiseRepository,
-                GameBuild.BANDASTATION, bandastationRepository
+                GameBuild.PARADISE, paradiseStorage,
+                GameBuild.BANDASTATION, bandastationStorage
         );
     }
 
     @Bean
-    public Map<GameBuild, NoteStorage> noteRepositoryMap(
-            @Qualifier(GameConfig.BUILD_PARADISE) NoteStorage paradiseRepository,
-            @Qualifier(GameConfig.BUILD_BANDASTRATION) NoteStorage bandastationRepository) {
+    public Map<GameBuild, BanStorage> banStorageMap(
+            @Qualifier(GameConfig.BUILD_PARADISE) BanStorage paradiseStorage,
+            @Qualifier(GameConfig.BUILD_BANDASTRATION) BanStorage bandastationStorage) {
         return Map.of(
-                GameBuild.PARADISE, paradiseRepository,
-                GameBuild.BANDASTATION, bandastationRepository
+                GameBuild.PARADISE, paradiseStorage,
+                GameBuild.BANDASTATION, bandastationStorage
         );
     }
 
     @Bean
-    public Map<GameBuild, CharacterStorage> characterRepositoryMap(
-            @Qualifier(GameConfig.BUILD_PARADISE) CharacterStorage paradiseRepository) {
+    public Map<GameBuild, NoteStorage> noteStorageMap(
+            @Qualifier(GameConfig.BUILD_PARADISE) NoteStorage paradiseStorage,
+            @Qualifier(GameConfig.BUILD_BANDASTRATION) NoteStorage bandastationStorage) {
         return Map.of(
-                GameBuild.PARADISE, paradiseRepository
-                // TODO: 01.08.2025 Provide repository here when bandastation will store game characters in a database.
+                GameBuild.PARADISE, paradiseStorage,
+                GameBuild.BANDASTATION, bandastationStorage
+        );
+    }
+
+    @Bean
+    public Map<GameBuild, CharacterStorage> characterStorageMap(
+            @Qualifier(GameConfig.BUILD_PARADISE) CharacterStorage paradiseStorage) {
+        return Map.of(
+                GameBuild.PARADISE, paradiseStorage
+                // TODO: 01.08.2025 Provide storage here when bandastation will store game characters in a database.
         );
     }
 }

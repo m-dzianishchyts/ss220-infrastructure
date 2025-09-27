@@ -21,8 +21,7 @@ public class GameServerData {
     @NotBlank
     private final String name;
 
-    @NotNull
-    private final GameBuild build;
+    private GameBuild build;
 
     @NotNull
     private final Boolean active;
@@ -43,9 +42,9 @@ public class GameServerData {
     @Nullable
     private final String key;
 
-    public GameServerData(@NotNull String id, @NotNull String name, @NotNull GameBuild build,
+    public GameServerData(@NotNull String id, @NotNull String name, @Nullable GameBuild build,
                           @DefaultValue("true") @NotNull Boolean active,
-                          @Nullable String host, @Nullable Inet4Address ip, @NotNull Integer port,
+                          @Nullable String host, @NotNull Inet4Address ip, @NotNull Integer port,
                           @Nullable String key) {
         this.id = id;
         this.name = name;

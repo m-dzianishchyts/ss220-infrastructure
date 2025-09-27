@@ -7,6 +7,7 @@ import club.ss220.core.spi.BanStorage;
 import club.ss220.storage.paradise.spring.jpa.ban.mapper.ParadiseBanMapper;
 import club.ss220.storage.paradise.spring.jpa.ban.repository.ParadiseBanJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import static club.ss220.core.config.GameConfig.BUILD_PARADISE;
 
 @Component
 @Qualifier(BUILD_PARADISE)
+@ConditionalOnProperty(name = "spring.datasource.paradise.url")
 public class ParadiseJpaBanStorage implements BanStorage {
 
     private final ParadiseBanJpaRepository jpaRepository;

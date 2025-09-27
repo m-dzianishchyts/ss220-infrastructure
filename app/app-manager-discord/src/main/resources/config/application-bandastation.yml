@@ -1,0 +1,16 @@
+spring:
+  config:
+    import: optional:classpath:/config/dev/application-bandastation-dev.yml
+  datasource:
+    bandastation:
+      # Just an example. Use config/dev/application-bandastation-dev.yml to provide your own values.
+      url: jdbc:mariadb://localhost:3307/bandastation
+      username: root
+      password: password
+
+ss220:
+  integration:
+    game:
+      builds:
+        bandastation:
+          enabled: true

@@ -2,6 +2,7 @@ package club.ss220.storage.bandastation.spring.jpa.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -20,6 +21,7 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(basePackages = BandaStationDataSourceConfig.REPOSITORY_PACKAGE,
         entityManagerFactoryRef = BandaStationDataSourceConfig.EMF_REF,
         transactionManagerRef = BandaStationDataSourceConfig.TX_MANAGER_REF)
+@ConditionalOnProperty(name = BandaStationDataSourceConfig.URL_PROPERTY)
 public class BandaStationDataSourceConfig {
 
     public static final String UNIT_NAME = "bandastation";
@@ -28,6 +30,7 @@ public class BandaStationDataSourceConfig {
     public static final String TX_MANAGER_REF = UNIT_NAME + "TxManager";
     public static final String REPOSITORY_PACKAGE = "club.ss220.storage.bandastation.spring.jpa";
     public static final String ENTITY_PACKAGE = "club.ss220.storage.bandastation.spring.jpa";
+    public static final String URL_PROPERTY = PROPERTIES_PREFIX + ".url";
 
     @Bean
     @ConfigurationProperties(PROPERTIES_PREFIX)

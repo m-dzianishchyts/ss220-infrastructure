@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "application.discord")
+@ConfigurationProperties(prefix = "ss220.discord")
 public class ManagerApplicationConfig {
 
     private String token;

@@ -1,0 +1,16 @@
+spring:
+  config:
+    import: optional:classpath:/config/dev/application-paradise-dev.yml
+  datasource:
+    paradise:
+      # Just an example. Use config/dev/application-paradise-dev.yml to provide your own values.
+      url: jdbc:mariadb://localhost:3306/paradise
+      username: root
+      password: password
+
+ss220:
+  integration:
+    game:
+      builds:
+        paradise:
+          enabled: true

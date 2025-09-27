@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties("application.format")
+@ConfigurationProperties("ss220.format")
 public class FormatConfig {
 
     private String dateFormat = "dd.MM.yyyy";

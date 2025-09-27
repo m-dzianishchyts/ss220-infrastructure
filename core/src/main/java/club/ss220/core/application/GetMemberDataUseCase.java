@@ -8,7 +8,7 @@ import club.ss220.core.spi.PlayerStorage;
 import club.ss220.core.spi.UserStorage;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -17,7 +17,7 @@ import java.util.TreeMap;
 public class GetMemberDataUseCase {
 
     private final UserStorage userStorage;
-    private final List<PlayerStorage> playerStorages;
+    private final Map<GameBuild, PlayerStorage> playerStorages;
 
     public Optional<MemberData> execute(long discordId) {
         return userStorage.findUserByDiscordId(discordId).map(this::enrichWithPlayerData);
@@ -31,7 +31,7 @@ public class GetMemberDataUseCase {
         String ckey = user.ckey();
         NavigableMap<GameBuild, PlayerData> gameInfo = new TreeMap<>();
 
-        for (PlayerStorage playerStorage : playerStorages) {
+        for (PlayerStorage playerStorage : playerStorages.values()) {
             playerStorage.findByCkey(ckey).ifPresent(player -> gameInfo.put(player.gameBuild(), player));
         }
         return new MemberData(user, gameInfo);

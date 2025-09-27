@@ -27,7 +27,7 @@ public class StaffController {
     public void showOnlineStaff(IReplyCallback interaction) {
         interaction.deferReply().queue();
 
-        List<GameServerData> servers = gameConfig.getServers();
+        List<GameServerData> servers = gameConfig.getSupportedServers();
         Map<GameServerData, List<OnlineStaffStatusData>> onlineStaff = getOnlineStaffListUseCase.execute(servers);
         senders.sendEmbed(interaction, view.renderOnlineStaff(onlineStaff));
         log.debug("Displayed online staff for {} servers", onlineStaff.size());

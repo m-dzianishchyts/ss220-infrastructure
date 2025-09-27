@@ -13,7 +13,7 @@ import java.util.Optional;
 @Slf4j
 @Data
 @Configuration
-@ConfigurationProperties("application.discord.game")
+@ConfigurationProperties("ss220.discord.game")
 public class GameDiscordConfig {
 
     @Valid

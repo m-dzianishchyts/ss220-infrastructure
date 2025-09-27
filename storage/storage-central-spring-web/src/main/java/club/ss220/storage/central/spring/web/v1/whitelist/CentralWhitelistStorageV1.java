@@ -13,6 +13,7 @@ import club.ss220.storage.central.spring.web.v1.whitelist.mapper.WhitelistMapper
 import club.ss220.storage.central.spring.web.v1.whitelist.presentation.NewWhitelistDiscordV1;
 import club.ss220.storage.central.spring.web.v1.whitelist.presentation.WhitelistPresentationV1;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "ss220.api.central.endpoint")
 public class CentralWhitelistStorageV1 implements WhitelistStorage {
 
     private final CentralApiV1 centralApi;

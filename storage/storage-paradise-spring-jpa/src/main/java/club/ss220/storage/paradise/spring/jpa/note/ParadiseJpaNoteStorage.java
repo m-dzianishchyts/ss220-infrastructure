@@ -7,6 +7,7 @@ import club.ss220.core.spi.NoteStorage;
 import club.ss220.storage.paradise.spring.jpa.note.mapper.ParadiseNoteMapper;
 import club.ss220.storage.paradise.spring.jpa.note.repository.ParadiseNoteJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ import static club.ss220.core.config.GameConfig.BUILD_PARADISE;
 
 @Component
 @Qualifier(BUILD_PARADISE)
+@ConditionalOnProperty(name = "spring.datasource.paradise.url")
 public class ParadiseJpaNoteStorage implements NoteStorage {
 
     private final ParadiseNoteJpaRepository jpaRepository;

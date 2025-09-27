@@ -67,7 +67,7 @@ public class ApplicationStatusService {
         try (Connection connection = bcDataSource.getConnection()) {
             int timeout = 5;
             return connection.isValid(timeout);
-        } catch (Exception e) {
+        } catch (Exception _) {
             return false;
         }
     }

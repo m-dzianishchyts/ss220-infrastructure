@@ -7,6 +7,7 @@ import club.ss220.storage.paradise.spring.jpa.character.mapper.ParadiseCharacter
 import club.ss220.storage.paradise.spring.jpa.character.repository.ParadiseCharacterJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,7 @@ import static club.ss220.core.config.GameConfig.BUILD_PARADISE;
 @Repository
 @Qualifier(BUILD_PARADISE)
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "spring.datasource.paradise.url")
 public class ParadiseJpaCharacterStorage implements CharacterStorage {
 
     private final ParadiseCharacterJpaRepository repository;

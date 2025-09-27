@@ -38,7 +38,7 @@ public class ActiveGameServerResolver
     @NotNull
     @Override
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
-        return gameConfig.getServers().stream()
+        return gameConfig.getSupportedServers().stream()
                 .filter(GameServerData::active)
                 .map(s -> new Command.Choice(s.fullName(), s.id()))
                 .toList();

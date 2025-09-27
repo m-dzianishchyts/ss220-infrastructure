@@ -1,0 +1,10 @@
+spring:
+  config:
+    import: optional:classpath:/config/dev/application-central-dev.yml
+
+ss220:
+  api:
+    central:
+      # Just an example. Use config/dev/application-central-dev.yml to provide your own values.
+      endpoint: http://localhost:8080
+      token: example_central_token

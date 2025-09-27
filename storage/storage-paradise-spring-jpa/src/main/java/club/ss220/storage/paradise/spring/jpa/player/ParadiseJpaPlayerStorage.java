@@ -1,11 +1,12 @@
 package club.ss220.storage.paradise.spring.jpa.player;
 
-import club.ss220.storage.paradise.spring.jpa.player.mapper.ParadisePlayerMapper;
-import club.ss220.storage.paradise.spring.jpa.player.repository.ParadisePlayerJpaRepository;
 import club.ss220.core.shared.PlayerData;
 import club.ss220.core.spi.PlayerStorage;
+import club.ss220.storage.paradise.spring.jpa.player.mapper.ParadisePlayerMapper;
+import club.ss220.storage.paradise.spring.jpa.player.repository.ParadisePlayerJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ import static club.ss220.core.config.GameConfig.BUILD_PARADISE;
 @Repository
 @Qualifier(BUILD_PARADISE)
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "spring.datasource.paradise.url")
 public class ParadiseJpaPlayerStorage implements PlayerStorage {
 
     private final ParadisePlayerJpaRepository repository;

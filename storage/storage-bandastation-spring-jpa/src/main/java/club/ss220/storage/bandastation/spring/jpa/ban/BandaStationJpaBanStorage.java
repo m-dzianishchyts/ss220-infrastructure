@@ -8,6 +8,7 @@ import club.ss220.core.util.InetUtils;
 import club.ss220.storage.bandastation.spring.jpa.ban.mapper.BandaStationBanMapper;
 import club.ss220.storage.bandastation.spring.jpa.ban.repository.BandaBanJpaRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import static club.ss220.core.config.GameConfig.BUILD_BANDASTRATION;
 
 @Component
 @Qualifier(BUILD_BANDASTRATION)
+@ConditionalOnProperty(name = "spring.datasource.bandastation.url")
 public class BandaStationJpaBanStorage implements BanStorage {
 
     private final BandaBanJpaRepository repository;

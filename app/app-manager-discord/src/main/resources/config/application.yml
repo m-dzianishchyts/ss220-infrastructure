@@ -4,20 +4,12 @@ spring:
     revision: snapshot
   config:
     import:
-      - optional:classpath:/application-dev.yml
+      - optional:classpath:/config/dev/application-dev.yml
   datasource:
     bc:
       url: jdbc:h2:./app-database;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
       username:
       password:
-    paradise:
-      url: jdbc:mariadb://localhost:3306/paradise
-      username: root
-      password: password
-    bandastation:
-      url: jdbc:mariadb://localhost:3307/bandastation
-      username: root
-      password: password
   jpa:
     open-in-view: false
     hibernate:
@@ -30,6 +22,8 @@ jda:
     - GUILD_MEMBERS
 
 botcommands:
+  core:
+    disableExceptionsInDMs: true
   application:
     forceGuildCommands: true
   components:
@@ -38,7 +32,7 @@ botcommands:
     emojis:
       enable: true
 
-application:
+ss220:
   discord:
     token: example_bot_token
     profile:
@@ -47,10 +41,15 @@ application:
       server-types:
         - name: prime
         - name: devtest
-  api:
-    central:
-      endpoint: http://localhost:8080
-      token: example_central_token
+  integration:
+    game:
+      servers:
+        bandastation:
+          - id: test
+            name: Test
+            ip: 127.0.0.1
+            port: 4000
+            key: example_key
   schedules:
     whitelist-validation:
       cron: "@hourly"

@@ -1,5 +1,6 @@
 package club.ss220.manager.infrastructure.discord;
 
+import club.ss220.core.config.GameConfig;
 import club.ss220.core.shared.GameBuild;
 import io.github.freya022.botcommands.api.commands.application.slash.options.SlashCommandOption;
 import io.github.freya022.botcommands.api.core.service.annotations.Resolver;
@@ -21,8 +22,11 @@ public class GameBuildResolver
         extends ClassParameterResolver<GameBuildResolver, GameBuild>
         implements SlashParameterResolver<GameBuildResolver, GameBuild> {
 
-    public GameBuildResolver() {
+    private final GameConfig gameConfig;
+
+    public GameBuildResolver(GameConfig gameConfig) {
         super(GameBuild.class);
+        this.gameConfig = gameConfig;
     }
 
     @NotNull
@@ -35,6 +39,7 @@ public class GameBuildResolver
     @Override
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
         return Arrays.stream(GameBuild.values())
+                .filter(build -> gameConfig.getBuilds().get(build).isEnabled())
                 .map(build -> new Command.Choice(build.getName(), build.getName()))
                 .toList();
     }

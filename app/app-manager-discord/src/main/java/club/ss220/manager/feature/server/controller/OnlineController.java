@@ -27,7 +27,7 @@ public class OnlineController {
     public void showPlayersOnline(IReplyCallback interaction) {
         interaction.deferReply().queue();
 
-        List<GameServerData> servers = gameConfig.getServers();
+        List<GameServerData> servers = gameConfig.getSupportedServers();
         Map<GameServerData, GameServerStatusData> serversStatuses = getAllServersStatus.execute(servers);
         senders.sendEmbed(interaction, view.renderPlayersOnline(serversStatuses));
         log.debug("Displayed online players for {} servers", serversStatuses.size());

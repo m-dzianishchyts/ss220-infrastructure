@@ -1,5 +1,7 @@
 package club.ss220.core.config;
 
+import club.ss220.core.shared.GameBuild;
+import club.ss220.core.shared.GameBuildData;
 import club.ss220.core.shared.GameServerData;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
@@ -12,24 +14,62 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+
+import static club.ss220.core.shared.GameBuild.BANDASTATION;
+import static club.ss220.core.shared.GameBuild.PARADISE;
 
 @Slf4j
 @Data
 @Configuration
-@ConfigurationProperties("application.integration.game")
+@ConfigurationProperties("ss220.integration.game")
 public class GameConfig {
 
     public static final String BUILD_PARADISE = "paradise";
     public static final String BUILD_BANDASTRATION = "bandastation";
 
     @Valid
-    private List<GameServerData> servers;
+    private Map<GameBuild, List<GameServerData>> servers = new EnumMap<>(GameBuild.class);
+    @Valid
+    private Map<GameBuild, GameBuildData> builds = Map.of(
+            BANDASTATION, GameBuildData.disabled(),
+            PARADISE, GameBuildData.disabled()
+    );
 
     @PostConstruct
-    void resolveHosts() throws UnknownHostException {
-        for (GameServerData server : servers) {
+    void completeServerData() throws UnknownHostException {
+        completeServerBuilds();
+        resolveServerHosts();
+    }
+
+    public List<GameServerData> getSupportedServers() {
+        return getServersFlat().stream()
+                .filter(s -> builds.get(s.build()).isEnabled())
+                .toList();
+    }
+
+    public Optional<GameServerData> getServerByAddress(String host, Integer port) {
+        return getServersFlat().stream()
+                .filter(s -> s.port().equals(port) && (host.equals(s.ip().getHostAddress()) || host.equals(s.host())))
+                .findAny();
+    }
+
+    public Optional<GameServerData> getServerById(String id) {
+        return getServersFlat().stream()
+                .filter(s -> id.equals(s.id()))
+                .findAny();
+    }
+
+    private void completeServerBuilds() {
+        servers.forEach((build, buildServers) -> buildServers.forEach(server -> server.build(build)));
+    }
+
+    private void resolveServerHosts() throws UnknownHostException {
+        for (GameServerData server : getSupportedServers()) {
             log.debug("Post-processing server {}", server);
             if (server.host() != null) {
                 Optional<Inet4Address> optionalIPv4 = Arrays.stream(InetAddress.getAllByName(server.host()))
@@ -49,15 +89,10 @@ public class GameConfig {
         }
     }
 
-    public Optional<GameServerData> getServerById(String id) {
-        return servers.stream()
-                .filter(s -> id.equals(s.id()))
-                .findAny();
-    }
-
-    public Optional<GameServerData> getServerByAddress(String host, Integer port) {
-        return servers.stream()
-                .filter(s -> s.port().equals(port) && (host.equals(s.ip().getHostAddress()) || host.equals(s.host())))
-                .findAny();
+    private List<GameServerData> getServersFlat() {
+        return servers.values().stream()
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .toList();
     }
 }

@@ -3,7 +3,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-manager/src/main/resources/application-dev.yml
+app/app-manager-discord/src/main/resources/config/dev/
 log/
 *.db
 
