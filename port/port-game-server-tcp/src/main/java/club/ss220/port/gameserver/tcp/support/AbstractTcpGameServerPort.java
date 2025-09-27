@@ -45,8 +45,9 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
 
         try {
             byte[] responseBytes = sendReceiveData(gameServer, fullCommand);
-            Object raw = processByondResponseBody(responseBytes).get(DATA_PROPERTY);
-            return objectMapper.convertValue(raw, typeRef);
+            Object rawData = processByondResponseBody(responseBytes).get(DATA_PROPERTY);
+            checkError(gameServer, censoredCommand, rawData);
+            return objectMapper.convertValue(rawData, typeRef);
 
         } catch (JsonProcessingException e) {
             String message = "Error decoding response for command '" + censoredCommand + "'";
@@ -98,6 +99,14 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
             return Arrays.copyOfRange(body, REPSONSE_PAD_BYTES, body.length - TRAILER_BYTES);
         } catch (SocketTimeoutException e) {
             throw new GameServerPortException(server, "Server " + server.fullName() + " is unavailable", e);
+        }
+    }
+
+    private static void checkError(GameServerData gameServer, String command, Object rawData) {
+        if (rawData instanceof Map<?, ?> rawDataMap && rawDataMap.containsKey("error")) {
+            Object error = rawDataMap.get("error");
+            String message = "Server returned error for command '" + command + "': " + error;
+            throw new GameServerPortException(gameServer, message);
         }
     }
 
