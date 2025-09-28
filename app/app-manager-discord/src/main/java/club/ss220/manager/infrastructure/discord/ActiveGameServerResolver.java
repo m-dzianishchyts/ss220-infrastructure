@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
 @Resolver
 public class ActiveGameServerResolver
@@ -38,10 +39,15 @@ public class ActiveGameServerResolver
     @NotNull
     @Override
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
-        return gameConfig.getSupportedServers().stream()
+        List<Command.Choice> choices = gameConfig.getSupportedServers().stream()
                 .filter(GameServerData::active)
                 .map(s -> new Command.Choice(s.fullName(), s.id()))
                 .toList();
+        if (choices.isEmpty()) {
+            // Only for development purposes
+            return List.of(new Command.Choice("<STUB>No active servers found</STUB>", ""));
+        }
+        return choices;
     }
 
     @Nullable

@@ -41,15 +41,6 @@ ss220:
       server-types:
         - name: prime
         - name: devtest
-  integration:
-    game:
-      servers:
-        bandastation:
-          - id: test
-            name: Test
-            ip: 127.0.0.1
-            port: 4000
-            key: example_key
   schedules:
     whitelist-validation:
       cron: "@hourly"

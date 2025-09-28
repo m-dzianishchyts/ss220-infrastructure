@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 @Data
@@ -14,5 +15,5 @@ import java.util.Map;
 public class WorkflowConfig {
 
     @Valid
-    private Map<GameBuild, MergeWorkflowConfig> merge;
+    private Map<GameBuild, MergeWorkflowConfig> merge = new EnumMap<>(GameBuild.class);
 }

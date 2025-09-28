@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Resolver
 public class GameBuildResolver
@@ -38,10 +39,15 @@ public class GameBuildResolver
     @NotNull
     @Override
     public Collection<Command.Choice> getPredefinedChoices(@Nullable Guild guild) {
-        return Arrays.stream(GameBuild.values())
+        List<Command.Choice> choices = Arrays.stream(GameBuild.values())
                 .filter(build -> gameConfig.getBuilds().get(build).isEnabled())
                 .map(build -> new Command.Choice(build.getName(), build.getName()))
                 .toList();
+        if (choices.isEmpty()) {
+            // Only for development purposes
+            return List.of(new Command.Choice("<STUB>No builds found</STUB>", ""));
+        }
+        return choices;
     }
 
     @Nullable
