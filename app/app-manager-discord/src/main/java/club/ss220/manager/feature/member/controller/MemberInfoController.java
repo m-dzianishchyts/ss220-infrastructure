@@ -85,7 +85,7 @@ public class MemberInfoController {
                 newContext,
                 e -> handleBuildSelection(e, context)
         )).queue();
-        log.debug("Displayed updated info with build selection: {}", selectedBuild.getName());
+        log.debug("Displayed updated info with build selection: {}", selectedBuild);
     }
 
     @Builder(toBuilder = true)

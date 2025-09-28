@@ -64,7 +64,7 @@ logging:
       file-name-pattern: ./log/archive/manager-%d{yyyy-MM-dd}.%i.log
   level:
     root: INFO
-    club.ss220.manager: INFO
+    club.ss220: INFO
     org.springframework: INFO
     net.dv8tion.jda: INFO
     com.zaxxer.hikari: INFO

@@ -14,5 +14,6 @@
 
     <modules>
         <module>port-game-server-tcp</module>
+        <module>port-github-actions</module>
     </modules>
 </project>
