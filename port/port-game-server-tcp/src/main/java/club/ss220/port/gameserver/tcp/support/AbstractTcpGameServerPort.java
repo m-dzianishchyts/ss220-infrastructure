@@ -94,7 +94,7 @@ public abstract class AbstractTcpGameServerPort implements GameServerPort {
 
             byte[] body = readExactly(in, bodyLength);
             if (body.length <= REPSONSE_PAD_BYTES + TRAILER_BYTES) {
-                return new byte[0];
+                throw new IOException("Invalid response length: " + body.length);
             }
             return Arrays.copyOfRange(body, REPSONSE_PAD_BYTES, body.length - TRAILER_BYTES);
         } catch (SocketTimeoutException e) {
