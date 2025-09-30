@@ -4,7 +4,8 @@ spring:
     revision: snapshot
   config:
     import:
-      - optional:classpath:/config/dev/application.yml
+      - optional:file:config/dev/application.yml
+      - optional:file:config/prod/application.yml
   datasource:
     bc:
       url: jdbc:h2:./app-database;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH

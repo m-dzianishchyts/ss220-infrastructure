@@ -1,6 +1,8 @@
 spring:
   config:
-    import: optional:classpath:/config/dev/application-paradise.yml
+    import:
+      - optional:file:config/dev/application-paradise.yml
+      - optional:file:config/prod/application-paradise.yml
   datasource:
     paradise:
       # Just an example. Use config/dev/application-paradise.yml to provide your own values.

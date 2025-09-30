@@ -1,6 +1,8 @@
 spring:
   config:
-    import: optional:classpath:/config/dev/application-redis.yml
+    import:
+      - optional:file:config/dev/application-redis.yml
+      - optional:file:config/prod/application-redis.yml
   data:
     redis:
       # Just an example. Use config/dev/application-redis.yml to provide your own values.

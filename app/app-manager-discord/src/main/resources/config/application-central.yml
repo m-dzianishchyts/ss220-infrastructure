@@ -1,6 +1,8 @@
 spring:
   config:
-    import: optional:classpath:/config/dev/application-central.yml
+    import:
+      - optional:file:config/dev/application-central.yml
+      - optional:file:config/prod/application-central.yml
 
 ss220:
   api:
