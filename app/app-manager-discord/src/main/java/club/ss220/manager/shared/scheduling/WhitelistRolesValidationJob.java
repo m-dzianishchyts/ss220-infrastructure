@@ -1,12 +1,13 @@
 package club.ss220.manager.shared.scheduling;
 
 import club.ss220.core.application.GetWhitelistUseCase;
+import club.ss220.core.shared.GameServerType;
 import club.ss220.core.shared.UserData;
 import club.ss220.core.shared.WhitelistData;
+import club.ss220.core.shared.event.WhitelistUpdateEvent;
 import club.ss220.core.spi.WhitelistQuery;
 import club.ss220.manager.config.GameDiscordConfig;
-import club.ss220.manager.shared.GameServerType;
-import club.ss220.manager.shared.events.WhitelistUpdateEvent;
+import club.ss220.manager.config.GameServerTypeConfig;
 import io.github.freya022.botcommands.api.core.annotations.BEventListener;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,7 +61,12 @@ public class WhitelistRolesValidationJob {
     }
 
     private void validateWhitelistRoles(Guild guild, GameServerType serverType) {
-        Long roleId = serverType.discordRoleId();
+        Optional<GameServerTypeConfig> serverTypeConfig = gameDiscordConfig.getServerTypeConfig(serverType);
+        if (serverTypeConfig.isEmpty()) {
+            log.error("Unknown server type: {}. Skipping job", serverType);
+            return;
+        }
+        Long roleId = serverTypeConfig.get().discordRoleId();
         if (roleId == null) {
             log.warn("No whitelist role, serveType: {}. Skipping job", serverType);
             return;
@@ -90,7 +97,7 @@ public class WhitelistRolesValidationJob {
 
         for (Long userId : toAdd) {
             try {
-                eventPublisher.publishEvent(WhitelistUpdateEvent.add(guild, serverType, userId));
+                eventPublisher.publishEvent(WhitelistUpdateEvent.add(guild.getIdLong(), serverType, userId));
                 added++;
             } catch (Exception e) {
                 log.error("Failed to add whitelist role for user {} in guild {}, serverType: {}",
@@ -99,7 +106,7 @@ public class WhitelistRolesValidationJob {
         }
         for (Long userId : toRemove) {
             try {
-                eventPublisher.publishEvent(WhitelistUpdateEvent.remove(guild, serverType, userId));
+                eventPublisher.publishEvent(WhitelistUpdateEvent.remove(guild.getIdLong(), serverType, userId));
                 removed++;
             } catch (Exception e) {
                 log.error("Failed to remove whitelist role for user {} in guild {}, serverType: {}",

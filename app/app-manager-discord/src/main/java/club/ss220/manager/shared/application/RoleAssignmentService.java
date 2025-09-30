@@ -1,18 +1,32 @@
 package club.ss220.manager.shared.application;
 
-import club.ss220.manager.shared.GameServerType;
+import club.ss220.core.shared.GameServerType;
+import club.ss220.manager.config.GameDiscordConfig;
+import club.ss220.manager.config.GameServerTypeConfig;
+import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RoleAssignmentService {
 
-    public void addWhitelistRole(Guild guild, long userId, GameServerType serverType) {
-        Long roleId = serverType.discordRoleId();
+    private final GameDiscordConfig gameDiscordConfig;
+
+    public void addWhitelistRole(@NotNull Guild guild, long userId, @NotNull GameServerType serverType) {
+        Optional<GameServerTypeConfig> serverTypeConfig = gameDiscordConfig.getServerTypeConfig(serverType);
+        if (serverTypeConfig.isEmpty()) {
+            log.error("Unknown server type: {}. Skipping role assignment", serverType);
+            return;
+        }
+        Long roleId = serverTypeConfig.get().discordRoleId();
         if (roleId == null) {
             log.warn("No role configured for server type: {}. Skipping role assignment", serverType);
             return;
@@ -30,7 +44,12 @@ public class RoleAssignmentService {
     }
 
     public void removeWhitelistRole(Guild guild, long userId, GameServerType serverType) {
-        Long roleId = serverType.discordRoleId();
+        Optional<GameServerTypeConfig> serverTypeConfig = gameDiscordConfig.getServerTypeConfig(serverType);
+        if (serverTypeConfig.isEmpty()) {
+            log.error("Unknown server type: {}. Skipping role removal", serverType);
+            return;
+        }
+        Long roleId = serverTypeConfig.get().discordRoleId();
         if (roleId == null) {
             log.warn("No role configured for server type: {}. Skipping role removal", serverType);
             return;

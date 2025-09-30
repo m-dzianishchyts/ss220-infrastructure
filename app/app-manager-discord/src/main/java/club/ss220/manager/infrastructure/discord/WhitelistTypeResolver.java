@@ -1,7 +1,7 @@
 package club.ss220.manager.infrastructure.discord;
 
+import club.ss220.core.shared.GameServerType;
 import club.ss220.manager.config.GameDiscordConfig;
-import club.ss220.manager.shared.GameServerType;
 import io.github.freya022.botcommands.api.commands.application.slash.options.SlashCommandOption;
 import io.github.freya022.botcommands.api.core.service.annotations.Resolver;
 import io.github.freya022.botcommands.api.parameters.ClassParameterResolver;
@@ -47,6 +47,6 @@ public class WhitelistTypeResolver
     public GameServerType resolve(@NotNull SlashCommandOption option,
                                   @NotNull CommandInteractionPayload event,
                                   @NotNull OptionMapping optionMapping) {
-        return gameDiscordConfig.getGameServerTypeByName(optionMapping.getAsString()).orElseThrow();
+        return gameDiscordConfig.getServerType(optionMapping.getAsString()).orElseThrow();
     }
 }

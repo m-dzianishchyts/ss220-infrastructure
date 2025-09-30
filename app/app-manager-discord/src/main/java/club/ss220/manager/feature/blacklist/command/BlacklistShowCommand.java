@@ -1,7 +1,7 @@
 package club.ss220.manager.feature.blacklist.command;
 
+import club.ss220.core.shared.GameServerType;
 import club.ss220.manager.feature.blacklist.controller.BlacklistController;
-import club.ss220.manager.shared.GameServerType;
 import club.ss220.manager.shared.MemberTarget;
 import io.github.freya022.botcommands.api.commands.annotations.Command;
 import io.github.freya022.botcommands.api.commands.application.ApplicationCommand;

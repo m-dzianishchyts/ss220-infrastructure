@@ -2,17 +2,17 @@ package club.ss220.manager.feature.whitelist.controller;
 
 import club.ss220.core.application.AddWhitelistEntryUseCase;
 import club.ss220.core.application.GetWhitelistUseCase;
+import club.ss220.core.shared.GameServerType;
 import club.ss220.core.shared.NewWhitelistEntry;
 import club.ss220.core.shared.UserData;
 import club.ss220.core.shared.WhitelistData;
+import club.ss220.core.shared.event.WhitelistUpdateEvent;
 import club.ss220.core.shared.exception.UserBlacklistedException;
 import club.ss220.core.spi.WhitelistQuery;
 import club.ss220.manager.feature.whitelist.view.WhitelistSimpleView;
 import club.ss220.manager.feature.whitelist.view.WhitelistVerboseView;
-import club.ss220.manager.shared.GameServerType;
 import club.ss220.manager.shared.MemberTarget;
 import club.ss220.manager.shared.application.UserDataProvider;
-import club.ss220.manager.shared.events.WhitelistUpdateEvent;
 import club.ss220.manager.shared.pagination.GenericPaginationController;
 import club.ss220.manager.shared.presentation.Senders;
 import jakarta.annotation.Nullable;
@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -120,8 +121,8 @@ public class WhitelistController {
 
         try {
             WhitelistData wl = addWhitelistEntryUseCase.execute(request);
-            Guild guild = interaction.getGuild();
-            eventPublisher.publishEvent(WhitelistUpdateEvent.add(guild, serverType, playerDiscordId));
+            Guild guild = Objects.requireNonNull(interaction.getGuild());
+            eventPublisher.publishEvent(WhitelistUpdateEvent.add(guild.getIdLong(), serverType, playerDiscordId));
             senders.sendEmbed(interaction, view.renderNewEntry(wl));
         } catch (UserBlacklistedException _) {
             senders.sendEmbedEphemeral(interaction, view.renderUserBlacklisted(playerTarget));
