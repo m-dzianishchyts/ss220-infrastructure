@@ -1,9 +1,9 @@
 spring:
   config:
-    import: optional:classpath:/config/dev/application-paradise-dev.yml
+    import: optional:classpath:/config/dev/application-paradise.yml
   datasource:
     paradise:
-      # Just an example. Use config/dev/application-paradise-dev.yml to provide your own values.
+      # Just an example. Use config/dev/application-paradise.yml to provide your own values.
       url: jdbc:mariadb://localhost:3306/paradise
       username: root
       password: password

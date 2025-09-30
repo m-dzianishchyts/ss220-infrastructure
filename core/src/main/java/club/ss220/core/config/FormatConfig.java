@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class FormatConfig {
 
     private String dateFormat = "dd.MM.yyyy";
+    private String timeFormat = "HH:mm:ss";
     private String dateTimeFormat = "dd.MM.yyyy HH:mm";
     private String durationFormat = "%1$dd %2$dh %3$dm %4$ds";
     private String roundDurationFormat = "%2$02d:%3$02d:%4$02d";

@@ -47,7 +47,7 @@ public class WhitelistRolesValidationJob {
     @Scheduled(cron = "${ss220.schedules.whitelist-validation.cron:@hourly}")
     public void validateGuilds() {
         if (jda == null) {
-            log.warn("JDA is not ready, skipping job");
+            log.error("JDA is not ready, skipping job");
             return;
         }
         jda.getGuilds().forEach(this::validateGuild);

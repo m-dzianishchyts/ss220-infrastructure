@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -23,6 +24,10 @@ public class Formatters {
 
     public String formatDate(LocalDate date) {
         return date.format(DateTimeFormatter.ofPattern(formatConfig.getDateFormat()));
+    }
+
+    public String formatTime(LocalTime time) {
+        return time.format(DateTimeFormatter.ofPattern(formatConfig.getTimeFormat()));
     }
 
     public String formatDateTime(LocalDateTime localDateTime) {

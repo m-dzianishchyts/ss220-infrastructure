@@ -37,6 +37,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>club.ss220</groupId>
+            <artifactId>port-redis-spring</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
         </dependency>
