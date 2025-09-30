@@ -1,11 +1,11 @@
-FROM maven:3.9.9-eclipse-temurin-24-alpine AS build
+FROM maven:3.9.11-eclipse-temurin-25-alpine AS build
 WORKDIR /build
 
 COPY . .
 
 RUN mvn clean package -DskipTests
 
-FROM eclipse-temurin:24-alpine AS central-api
+FROM eclipse-temurin:25-alpine AS central-api
 WORKDIR /app
 
 COPY --from=build /build/app/app-central-api/target/club.ss220.app-central-api.jar app.jar
@@ -13,7 +13,7 @@ COPY --from=build /build/app/app-central-api/target/club.ss220.app-central-api.j
 EXPOSE 8000
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
-FROM eclipse-temurin:24-alpine AS manager
+FROM eclipse-temurin:25-alpine AS manager
 WORKDIR /app
 
 COPY --from=build /build/app/app-manager-discord/target/club.ss220.app-manager-discord.jar app.jar
