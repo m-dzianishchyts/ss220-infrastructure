@@ -23,6 +23,7 @@ public interface ParadisePlayerMapper {
     @Mapping(target = "lastSeenDateTime", source = "lastSeen")
     @Mapping(target = "ip", source = "ip", qualifiedByName = "ipToInet")
     @Mapping(target = "exp", source = "exp", qualifiedByName = "mapRoleTime")
+    @Mapping(target = "lastAdminRank", expression = "java(player.getLastAdminRank())")
     PlayerData toPlayerData(ParadisePlayerEntity player);
 
     @SneakyThrows
