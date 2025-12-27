@@ -1,6 +1,8 @@
 package club.ss220.port.actions.github.util;
 
 import io.jsonwebtoken.Jwts;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.nio.file.Files;
@@ -12,10 +14,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtils {
-
-    private JwtUtils() {
-    }
 
     @SneakyThrows
     public static String createJwt(String appId, Path keyPath, Duration jwtLifetime) {

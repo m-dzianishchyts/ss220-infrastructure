@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Objects;
 
 public record MergeWorkflowConfig(
         @NotBlank
@@ -23,8 +24,6 @@ public record MergeWorkflowConfig(
     private static final Duration DEFAULT_TIMEOUT = Duration.ofMinutes(10);
 
     public MergeWorkflowConfig {
-        if (timeout == null) {
-            timeout = DEFAULT_TIMEOUT;
-        }
+        timeout = Objects.requireNonNullElse(timeout, DEFAULT_TIMEOUT);
     }
 }

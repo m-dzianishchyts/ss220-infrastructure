@@ -1,13 +1,13 @@
 package club.ss220.port.actions.github.util;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.kohsuke.github.GHWorkflowRun;
 
 import java.util.Set;
 
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GitHubUtils {
-
-    private GitHubUtils() {
-    }
 
     public static boolean isWorkflowCompleted(GHWorkflowRun workflowRun) {
         return Set.of(
