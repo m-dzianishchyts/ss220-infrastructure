@@ -47,21 +47,6 @@ ss220:
       cron: "@hourly"
 
 logging:
-  file:
-    name: ./log/manager.log
-  logback:
-    rollingpolicy:
-      max-file-size: 10MB
-      total-size-cap: 1GB
-      file-name-pattern: ./log/archive/manager-%d{yyyy-MM-dd}.%i.log
-  level:
-    root: INFO
-    club.ss220: INFO
-    org.springframework: INFO
-    net.dv8tion.jda: INFO
-    com.zaxxer.hikari: INFO
-    org.flywaydb: WARN
-    io.github.freya022.botcommands: DEBUG
   discord:
     dispatchChannelId: 0
     dispatchInterval: 360
